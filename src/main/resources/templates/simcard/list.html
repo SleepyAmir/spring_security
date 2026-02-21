@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::content})}">
+<body>
+    <div th:fragment="content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-sim"></i> لیست سیم کارت‌های من</h2>
+            <a href="/simcards/create" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> افزودن سیم کارت جدید
+            </a>
+        </div>
+        
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>کد</th>
+                                <th>شماره تلفن</th>
+                                <th>شماره سریال</th>
+                                <th>اپراتور</th>
+                                <th>وضعیت</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="simcard : ${simcards}">
+                                <td th:text="${simcard.id}"></td>
+                                <td th:text="${simcard.phoneNumber}"></td>
+                                <td th:text="${simcard.serialNumber ?: 'تعریف نشده'}"></td>
+                                <td th:text="${simcard.operator ?: 'تعریف نشده'}"></td>
+                                <td>
+                                    <span th:if="${simcard.active}" class="badge bg-success">فعال</span>
+                                    <span th:unless="${simcard.active}" class="badge bg-danger">غیرفعال</span>
+                                </td>
+                                <td>
+                                    <a th:href="@{/simcards/edit/{id}(id=${simcard.id})}" 
+                                       class="btn btn-sm btn-warning">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a th:href="@{/simcards/delete/{id}(id=${simcard.id})}" 
+                                       class="btn btn-sm btn-danger"
+                                       onclick="return confirm('آیا از حذف این سیم کارت اطمینان دارید؟')">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(simcards)}">
+                                <td colspan="6" class="text-center text-muted">هیچ سیم کارتی یافت نشد</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::content})}">
+<body>
+    <div th:fragment="content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-pencil-square"></i> ویرایش سیم کارت</h2>
+            <a href="/simcards" class="btn btn-secondary">
+                <i class="bi bi-arrow-right"></i> بازگشت
+            </a>
+        </div>
+        
+        <div class="card">
+            <div class="card-body">
+                <form th:action="@{/simcards/edit/{id}(id=${simcard.id})}" th:object="${simcard}" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="phoneNumber" class="form-label">شماره تلفن <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="phoneNumber" th:field="*{phoneNumber}" 
+                                   maxlength="11" pattern="09[0-9]{9}" placeholder="09123456789" required>
+                            <div th:if="${#fields.hasErrors('phoneNumber')}" class="text-danger">
+                                <small th:errors="*{phoneNumber}"></small>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="serialNumber" class="form-label">شماره سریال</label>
+                            <input type="text" class="form-control" id="serialNumber" th:field="*{serialNumber}" 
+                                   maxlength="20">
+                            <div th:if="${#fields.hasErrors('serialNumber')}" class="text-danger">
+                                <small th:errors="*{serialNumber}"></small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="operator" class="form-label">اپراتور</label>
+                            <input type="text" class="form-control" id="operator" th:field="*{operator}" 
+                                   maxlength="50" placeholder="ایرانسل، همراه اول، رایتل">
+                            <div th:if="${#fields.hasErrors('operator')}" class="text-danger">
+                                <small th:errors="*{operator}"></small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="active" th:field="*{active}">
+                            <label class="form-check-label" for="active">فعال</label>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="/simcards" class="btn btn-secondary">انصراف</a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> به‌روزرسانی
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
