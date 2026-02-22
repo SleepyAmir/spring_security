@@ -32,7 +32,6 @@ public class BankAccountServiceImpl implements BankAccountService {
     public void save(BankAccountDto bankAccountDto) {
         bankAccountDto.setAccountNumber(generateAccountNumber());
         bankAccountDto.setBalance(Default_Balance);
-
         BankAccount bankAccount = bankAccountMapper.toEntity(bankAccountDto);
         bankAccountRepository.save(bankAccount);
     }
@@ -47,8 +46,7 @@ public class BankAccountServiceImpl implements BankAccountService {
         BankAccount existingAccount = bankAccountRepository.findById(bankAccountDto.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Account not found"));
 
-        existingAccount.setName(bankAccountDto.getName());
-        existingAccount.setFamily(bankAccountDto.getFamily());
+
         existingAccount.setType(bankAccountDto.getType());
         bankAccountRepository.save(existingAccount);
     }
