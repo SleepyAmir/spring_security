@@ -2,6 +2,7 @@ package com.mftplus.spring_security.bankAccount.model.entity;
 
 import com.mftplus.spring_security.bankAccount.model.enums.AccountType;
 import com.mftplus.spring_security.core.model.Person;
+import com.mftplus.spring_security.core.model.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -42,8 +43,8 @@ public class BankAccount  {
     private boolean deleted = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "person_id", nullable = false)
-    private Person person;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
 
 }
