@@ -1,6 +1,7 @@
 package com.mftplus.spring_security.bankAccount.model.entity;
 
 import com.mftplus.spring_security.bankAccount.model.enums.AccountType;
+import com.mftplus.spring_security.core.model.Person;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -27,14 +28,6 @@ public class BankAccount  {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Pattern(regexp = "^[a-zA-Z\\s]{3,20}$",message = "Invalid Name")
-    @Column(name="name", length = 20, nullable = false)
-    private String name;
-
-    @Pattern(regexp = "^[a-zA-Z\\s]{3,20}$",message = "Invalid Name")
-    @Column(name="family", length = 20, nullable = false)
-    private String family;
-
     @Column(nullable = false, unique = true, length = 16)
     private String accountNumber;
 
@@ -47,6 +40,10 @@ public class BankAccount  {
 
     @Column(name = "deleted", nullable = false)
     private boolean deleted = false;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "person_id", nullable = false)
+    private Person person;
 
 
 }

@@ -4,7 +4,7 @@ import com.mftplus.spring_security.bankAccount.model.enums.AccountType;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
-import java.math.BigDecimal;
+
 
 @Data
 public class BankAccountDto {
@@ -20,7 +20,7 @@ public class BankAccountDto {
     private String accountNumber;
 
 
-    private BigDecimal balance;
+    private Double balance;
 
 
     private AccountType type;
