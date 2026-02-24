@@ -1,4 +1,4 @@
-package com.mftplus.spring_security.product.controller;
+package com.mftplus.spring_security.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

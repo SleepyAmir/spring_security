@@ -1,8 +1,7 @@
 package com.mftplus.spring_security.product.model;
 
-import com.mftplus.spring_security.bankAccount.model.entity.BankAccount;
-import com.mftplus.spring_security.core.model.Person;
 import com.mftplus.spring_security.core.model.Purchasable;
+import com.mftplus.spring_security.core.model.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
@@ -43,7 +42,7 @@ public class Product extends BaseEntity implements Purchasable {
     private boolean deleted = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id")
-    private Person person;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
 }

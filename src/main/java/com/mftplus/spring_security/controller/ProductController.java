@@ -1,4 +1,4 @@
-package com.mftplus.spring_security.product.controller;
+package com.mftplus.spring_security.controller;
 
 import com.mftplus.spring_security.product.dto.ProductDto;
 import com.mftplus.spring_security.product.service.ProductService;
