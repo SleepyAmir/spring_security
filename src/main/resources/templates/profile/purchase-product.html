@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خرید کالا</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Tahoma', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .purchase-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .product-info {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+        .price-highlight {
+            font-size: 2rem;
+            color: #28a745;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="purchase-card">
+                    <h3 class="text-center mb-4">خرید کالا</h3>
+
+                    <!-- Alert Messages -->
+                    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show">
+                        <span th:text="${errorMessage}"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+
+                    <!-- Product Info -->
+                    <div class="product-info">
+                        <h5 th:text="${product.name}">نام کالا</h5>
+                        <p th:text="${product.description}">توضیحات کالا</p>
+                        <p class="price-highlight mb-0" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' ریال'"></p>
+                    </div>
+
+                    <!-- Purchase Form -->
+                    <form th:action="@{/profile/products/{id}/purchase(id=${product.id})}" method="post">
+                        <div class="mb-3">
+                            <label for="bankAccountId" class="form-label">انتخاب حساب بانکی:</label>
+                            <select class="form-select" id="bankAccountId" name="bankAccountId" required>
+                                <option value="">-- یک حساب انتخاب کنید --</option>
+                                <option th:each="account : ${accounts}" 
+                                        th:value="${account.id}"
+                                        th:text="${account.accountNumber} + ' - موجودی: ' + ${#numbers.formatDecimal(account.balance, 0, 'COMMA', 0, 'POINT')} + ' ریال'">
+                                </option>
+                            </select>
+                            <div th:if="${accounts.isEmpty()}" class="alert alert-warning mt-2">
+                                شما هیچ حساب بانکی ندارید. لطفا ابتدا یک حساب ایجاد کنید.
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg" th:disabled="${accounts.isEmpty()}">
+                                تایید و خرید
+                            </button>
+                            <a th:href="@{/profile/products}" class="btn btn-secondary">بازگشت</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

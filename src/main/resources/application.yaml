@@ -2,35 +2,35 @@ spring:
   application:
     name: spring_security
   
-  # MySQL Database Configuration
+  # H2 In-Memory Database (بدون نیاز به MySQL)
   datasource:
-    url: jdbc:mysql://localhost:3306/mft
-    username: root
-    password: root123
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
   # JPA Configuration
   jpa:
     hibernate:
-      ddl-auto: update
-#    show-sql: true
+      ddl-auto: create-drop  # هر بار که برنامه run میشه، جداول از نو ساخته میشن
+    show-sql: true
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
+        dialect: org.hibernate.dialect.H2Dialect
         format_sql: true
-  
-  # H2 Database Configuration for Caching Department
+
+  # H2 Console - برای دیدن دیتابیس
   h2:
     console:
       enabled: true
       path: /h2-console
-  
+
   # Cache Configuration
   cache:
     type: simple
     cache-names:
       - departments
-  
+
   # Thymeleaf Configuration
   thymeleaf:
     cache: false
@@ -54,3 +54,9 @@ logging:
     com.mftplus.spring_security: DEBUG
     org.springframework.security: DEBUG
     sql: debug
+
+# نکته: برای دیدن دیتابیس به آدرس زیر برید:
+# http://localhost:8080/h2-console
+# JDBC URL: jdbc:h2:mem:testdb
+# Username: sa
+# Password: (خالی بگذارید)
