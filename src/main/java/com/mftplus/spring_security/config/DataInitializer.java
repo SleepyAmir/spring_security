@@ -222,16 +222,16 @@ public class DataInitializer implements CommandLineRunner {
                     .orElseThrow(() -> new RuntimeException("User 2 not found"));
 
             // حساب‌های ادمین
-            createBankAccount(admin, AccountType.CHECKING, new BigDecimal("50000000")); // 50 میلیون
-            createBankAccount(admin, AccountType.SAVINGS, new BigDecimal("100000000")); // 100 میلیون
+            createBankAccount(admin, AccountType.CHECKING, new BigDecimal("5000000000")); // 50 میلیون
+            createBankAccount(admin, AccountType.SAVINGS, new BigDecimal("1000000000000000")); // 100 میلیون
 
             // حساب‌های کاربر 1
             createBankAccount(user1, AccountType.CHECKING, new BigDecimal("30000000")); // 30 میلیون
-            createBankAccount(user1, AccountType.SAVINGS, new BigDecimal("75000000")); // 75 میلیون
+            createBankAccount(user1, AccountType.SAVINGS, new BigDecimal("750000000000")); // 75 میلیون
 
             // حساب‌های کاربر 2
             createBankAccount(user2, AccountType.CHECKING, new BigDecimal("45000000")); // 45 میلیون
-            createBankAccount(user2, AccountType.SAVINGS, new BigDecimal("120000000")); // 120 میلیون
+            createBankAccount(user2, AccountType.SAVINGS, new BigDecimal("12000000000000")); // 120 میلیون
 
             log.info("✅ Bank accounts initialized");
         }
@@ -261,11 +261,10 @@ public class DataInitializer implements CommandLineRunner {
                     .orElseThrow(() -> new RuntimeException("Admin user not found"));
             User user1 = userRepository.findByUsername("ali.ahmadi")
                     .orElseThrow(() -> new RuntimeException("User 1 not found"));
+            User user2 = userRepository.findByUsername("zahra.mohammadi")
+                    .orElseThrow(() -> new RuntimeException("User 2 not found"));
 
-            // محصولات با اعتبارسنجی Pattern صحیح
-            // Pattern: ^[a-zA-Z\s]{3,20}$ برای name
-            // Pattern: ^[a-zA-Z0-9\s.,!?-]{3,255}$ برای description
-
+            // محصولات قبلی (10 عدد)
             createProduct("Laptop", "High performance laptop for work and gaming.", 25000000.0, admin);
             createProduct("Mouse", "Wireless optical mouse with ergonomic design.", 500000.0, admin);
             createProduct("Keyboard", "Mechanical gaming keyboard with RGB lights.", 2500000.0, user1);
@@ -277,7 +276,19 @@ public class DataInitializer implements CommandLineRunner {
             createProduct("Charger", "Fast charging USB-C power adapter.", 350000.0, admin);
             createProduct("Cable", "Premium USB-C to Lightning cable.", 250000.0, user1);
 
-            log.info("✅ Products initialized");
+            // ۱۰ محصول جدید
+            createProduct("Smartphone", "Flagship smartphone with 5G support and 108MP camera.", 15000000.0, user2);
+            createProduct("Smart Watch", "Fitness tracker with heart rate monitor and GPS.", 4500000.0, admin);
+            createProduct("External SSD", "1TB portable SSD with USB 3.2 interface.", 3500000.0, user1);
+            createProduct("Printer", "Wireless all-in-one printer with scanner and copier.", 5200000.0, user2);
+            createProduct("Router", "Dual-band WiFi 6 router for high-speed internet.", 2800000.0, admin);
+            createProduct("Power Bank", "20000mAh power bank with fast charging support.", 850000.0, user1);
+            createProduct("Memory Card", "128GB microSD card for smartphones and cameras.", 450000.0, user2);
+            createProduct("USB Hub", "7-port USB 3.0 hub with individual power switches.", 650000.0, admin);
+            createProduct("Laptop Stand", "Adjustable aluminum laptop stand for desk.", 1200000.0, user1);
+            createProduct("Microphone", "Professional USB microphone for podcasting and streaming.", 3800000.0, user2);
+
+            log.info("✅ Products initialized (20 products total)");
         }
     }
 
@@ -297,43 +308,40 @@ public class DataInitializer implements CommandLineRunner {
                     .orElseThrow(() -> new RuntimeException("Admin user not found"));
             User user2 = userRepository.findByUsername("zahra.mohammadi")
                     .orElseThrow(() -> new RuntimeException("User 2 not found"));
+            User user1 = userRepository.findByUsername("ali.ahmadi")
+                    .orElseThrow(() -> new RuntimeException("User 1 not found"));
 
-            // خانه 1 - آپارتمان تهران
-            // اعتبارسنجی: address (min=5, max=255), city (min=2, max=100), state (min=2, max=100)
-            // postalCode: Pattern ^[0-9]{10}$, area: min=5.0 max=10000.0
-            // numberOfRooms: min=1 max=50, floor: min=0 max=200, totalFloors: min=1 max=200
-            // yearBuilt: min=1800, price: min=1
+            // خانه‌های قبلی (7 عدد)
             Home home1 = Home.builder()
-                    .address("Valiasr Street, Fifth Alley, Number 12") // حداقل 5 کاراکتر
-                    .city("Tehran") // حداقل 2 کاراکتر
-                    .state("Tehran") // حداقل 2 کاراکتر
-                    .postalCode("1234567890") // دقیقاً 10 رقم
+                    .address("Valiasr Street, Fifth Alley, Number 12")
+                    .city("Tehran")
+                    .state("Tehran")
+                    .postalCode("1234567890")
                     .type(HomeType.APARTMENT)
                     .status(HomeStatus.AVAILABLE)
-                    .area(120.0) // بین 5 تا 10000
-                    .numberOfRooms(3) // بین 1 تا 50
-                    .floor(5) // بین 0 تا 200
-                    .totalFloors(8) // بین 1 تا 200
-                    .yearBuilt(2018) // بیشتر از 1800
+                    .area(120.0)
+                    .numberOfRooms(3)
+                    .floor(5)
+                    .totalFloors(8)
+                    .yearBuilt(2018)
                     .hasParking(true)
                     .hasElevator(true)
                     .hasStorage(true)
                     .hasBalcony(true)
                     .hasPool(false)
                     .hasGym(false)
-                    .price(15000000000L) // حداقل 1
-                    .description("Brand new apartment in prime location of Valiasr.") // حداکثر 1000 کاراکتر
+                    .price(15000000000L)
+                    .description("Brand new apartment in prime location of Valiasr.")
                     .user(admin)
                     .deleted(false)
                     .build();
             homeRepository.save(home1);
 
-            // خانه 2 - ویلا شمال
             Home home2 = Home.builder()
                     .address("Chalus Road, Sangadeh Village, Plot 5")
                     .city("Nowshahr")
                     .state("Mazandaran")
-                    .postalCode("9876543210") // 10 رقم
+                    .postalCode("9876543210")
                     .type(HomeType.VILLA)
                     .status(HomeStatus.AVAILABLE)
                     .area(250.0)
@@ -348,18 +356,17 @@ public class DataInitializer implements CommandLineRunner {
                     .hasPool(true)
                     .hasGym(false)
                     .price(25000000000L)
-                    .description("Luxury villa with swimming pool and sea view. Perfect for summer vacation.")
+                    .description("Luxury villa with swimming pool and sea view.")
                     .user(admin)
                     .deleted(false)
                     .build();
             homeRepository.save(home2);
 
-            // خانه 3 - دوبلکس اصفهان
             Home home3 = Home.builder()
                     .address("Ahmad Abad Square, Golestan Alley, Unit 15")
                     .city("Isfahan")
                     .state("Isfahan")
-                    .postalCode("8888888888") // 10 رقم
+                    .postalCode("8888888888")
                     .type(HomeType.DUPLEX)
                     .status(HomeStatus.AVAILABLE)
                     .area(180.0)
@@ -374,18 +381,17 @@ public class DataInitializer implements CommandLineRunner {
                     .hasPool(false)
                     .hasGym(true)
                     .price(12000000000L)
-                    .description("Modern duplex with gym and complete facilities in central Isfahan.")
+                    .description("Modern duplex with gym and complete facilities.")
                     .user(user2)
                     .deleted(false)
                     .build();
             homeRepository.save(home3);
 
-            // خانه 4 - پنت‌هاوس تهران (RESERVED)
             Home home4 = Home.builder()
                     .address("Elahieh, Saadat Abad Tower, Floor 20")
                     .city("Tehran")
                     .state("Tehran")
-                    .postalCode("1111111111") // 10 رقم
+                    .postalCode("1111111111")
                     .type(HomeType.PENTHOUSE)
                     .status(HomeStatus.RESERVED)
                     .area(300.0)
@@ -400,21 +406,20 @@ public class DataInitializer implements CommandLineRunner {
                     .hasPool(true)
                     .hasGym(true)
                     .price(50000000000L)
-                    .description("Luxury penthouse with 360 degree panoramic view. Swimming pool and gym included.")
+                    .description("Luxury penthouse with 360 degree panoramic view.")
                     .user(user2)
                     .deleted(false)
                     .build();
             homeRepository.save(home4);
 
-            // خانه 5 - استودیو کوچک (ارزان برای تست خرید)
             Home home5 = Home.builder()
                     .address("Shahrak Gharb, Phase 1, Building 8")
                     .city("Tehran")
                     .state("Tehran")
-                    .postalCode("2222222222") // 10 رقم
+                    .postalCode("2222222222")
                     .type(HomeType.STUDIO)
                     .status(HomeStatus.AVAILABLE)
-                    .area(45.0) // حداقل 5
+                    .area(45.0)
                     .numberOfRooms(1)
                     .floor(2)
                     .totalFloors(5)
@@ -426,18 +431,17 @@ public class DataInitializer implements CommandLineRunner {
                     .hasPool(false)
                     .hasGym(false)
                     .price(3000000000L)
-                    .description("Compact studio apartment, ideal for single residents. Good for testing purchase.")
+                    .description("Compact studio apartment, ideal for single residents.")
                     .user(admin)
                     .deleted(false)
                     .build();
             homeRepository.save(home5);
 
-            // خانه 6 - تاون‌هاوس
             Home home6 = Home.builder()
                     .address("Lavasan, Green Valley Complex, Unit 23")
                     .city("Tehran")
                     .state("Tehran")
-                    .postalCode("3333333333") // 10 رقم
+                    .postalCode("3333333333")
                     .type(HomeType.TOWNHOUSE)
                     .status(HomeStatus.AVAILABLE)
                     .area(200.0)
@@ -452,18 +456,17 @@ public class DataInitializer implements CommandLineRunner {
                     .hasPool(false)
                     .hasGym(false)
                     .price(18000000000L)
-                    .description("Beautiful townhouse in peaceful mountain area with modern design and green space.")
+                    .description("Beautiful townhouse in peaceful mountain area.")
                     .user(admin)
                     .deleted(false)
                     .build();
             homeRepository.save(home6);
 
-            // خانه 7 - دفتر کاری (OFFICE)
             Home home7 = Home.builder()
                     .address("Sattarkhan Street, Business Tower, Floor 12")
                     .city("Tehran")
                     .state("Tehran")
-                    .postalCode("4444444444") // 10 رقم
+                    .postalCode("4444444444")
                     .type(HomeType.OFFICE)
                     .status(HomeStatus.AVAILABLE)
                     .area(85.0)
@@ -478,13 +481,264 @@ public class DataInitializer implements CommandLineRunner {
                     .hasPool(false)
                     .hasGym(false)
                     .price(6000000000L)
-                    .description("Modern office space with great location for business. Includes meeting rooms.")
+                    .description("Modern office space with great location for business.")
                     .user(user2)
                     .deleted(false)
                     .build();
             homeRepository.save(home7);
 
-            log.info("✅ Homes initialized (7 properties)");
+            // ۱۰ خانه جدید
+            Home home8 = Home.builder()
+                    .address("Vanak Square, Ghods Street, Building 45, Unit 8")
+                    .city("Tehran")
+                    .state("Tehran")
+                    .postalCode("5555555555")
+                    .type(HomeType.APARTMENT)
+                    .status(HomeStatus.AVAILABLE)
+                    .area(95.0)
+                    .numberOfRooms(2)
+                    .floor(4)
+                    .totalFloors(7)
+                    .yearBuilt(2020)
+                    .hasParking(true)
+                    .hasElevator(true)
+                    .hasStorage(false)
+                    .hasBalcony(true)
+                    .hasPool(false)
+                    .hasGym(false)
+                    .price(12000000000L)
+                    .description("Cozy 2-bedroom apartment in the heart of Tehran, close to metro.")
+                    .user(user1)
+                    .deleted(false)
+                    .build();
+            homeRepository.save(home8);
+
+            Home home9 = Home.builder()
+                    .address("Kish Island, Maryam Complex, Block A, Unit 12")
+                    .city("Kish")
+                    .state("Hormozgan")
+                    .postalCode("6666666666")
+                    .type(HomeType.APARTMENT)
+                    .status(HomeStatus.AVAILABLE)
+                    .area(75.0)
+                    .numberOfRooms(2)
+                    .floor(2)
+                    .totalFloors(5)
+                    .yearBuilt(2021)
+                    .hasParking(false)
+                    .hasElevator(true)
+                    .hasStorage(false)
+                    .hasBalcony(true)
+                    .hasPool(true)
+                    .hasGym(true)
+                    .price(18000000000L)
+                    .description("Beautiful apartment in Kish Island, with access to beach and resort facilities.")
+                    .user(admin)
+                    .deleted(false)
+                    .build();
+            homeRepository.save(home9);
+
+            Home home10 = Home.builder()
+                    .address("Mashhad, Ahmadabad Avenue, Corner of 12th Street")
+                    .city("Mashhad")
+                    .state("Khorasan Razavi")
+                    .postalCode("7777777777")
+                    .type(HomeType.APARTMENT)
+                    .status(HomeStatus.AVAILABLE)
+                    .area(110.0)
+                    .numberOfRooms(3)
+                    .floor(6)
+                    .totalFloors(8)
+                    .yearBuilt(2019)
+                    .hasParking(true)
+                    .hasElevator(true)
+                    .hasStorage(true)
+                    .hasBalcony(false)
+                    .hasPool(false)
+                    .hasGym(false)
+                    .price(9000000000L)
+                    .description("Spacious apartment near holy shrine, suitable for families.")
+                    .user(user2)
+                    .deleted(false)
+                    .build();
+            homeRepository.save(home10);
+
+            Home home11 = Home.builder()
+                    .address("Shiraz, Eram Street, Golha Complex")
+                    .city("Shiraz")
+                    .state("Fars")
+                    .postalCode("8888888881")
+                    .type(HomeType.DUPLEX)
+                    .status(HomeStatus.AVAILABLE)
+                    .area(160.0)
+                    .numberOfRooms(4)
+                    .floor(1)
+                    .totalFloors(2)
+                    .yearBuilt(2020)
+                    .hasParking(true)
+                    .hasElevator(false)
+                    .hasStorage(true)
+                    .hasBalcony(true)
+                    .hasPool(false)
+                    .hasGym(false)
+                    .price(14000000000L)
+                    .description("Lovely duplex with garden access in beautiful Shiraz.")
+                    .user(admin)
+                    .deleted(false)
+                    .build();
+            homeRepository.save(home11);
+
+            Home home12 = Home.builder()
+                    .address("Tabriz, El Goli Avenue, Luxury Tower, Floor 10")
+                    .city("Tabriz")
+                    .state("East Azerbaijan")
+                    .postalCode("9999999999")
+                    .type(HomeType.PENTHOUSE)
+                    .status(HomeStatus.AVAILABLE)
+                    .area(220.0)
+                    .numberOfRooms(4)
+                    .floor(10)
+                    .totalFloors(12)
+                    .yearBuilt(2022)
+                    .hasParking(true)
+                    .hasElevator(true)
+                    .hasStorage(true)
+                    .hasBalcony(true)
+                    .hasPool(false)
+                    .hasGym(true)
+                    .price(22000000000L)
+                    .description("Luxury penthouse with amazing view of El Goli lake.")
+                    .user(user1)
+                    .deleted(false)
+                    .build();
+            homeRepository.save(home12);
+
+            Home home13 = Home.builder()
+                    .address("Ramsar, Seaside Boulevard, Villa No. 7")
+                    .city("Ramsar")
+                    .state("Mazandaran")
+                    .postalCode("1010101010")
+                    .type(HomeType.VILLA)
+                    .status(HomeStatus.AVAILABLE)
+                    .area(320.0)
+                    .numberOfRooms(6)
+                    .floor(0)
+                    .totalFloors(2)
+                    .yearBuilt(2018)
+                    .hasParking(true)
+                    .hasElevator(false)
+                    .hasStorage(true)
+                    .hasBalcony(true)
+                    .hasPool(true)
+                    .hasGym(true)
+                    .price(35000000000L)
+                    .description("Spacious villa with private pool and direct access to the sea.")
+                    .user(admin)
+                    .deleted(false)
+                    .build();
+            homeRepository.save(home13);
+
+            Home home14 = Home.builder()
+                    .address("Karaj, Mehrshahr, Phase 3, Block 7")
+                    .city("Karaj")
+                    .state("Alborz")
+                    .postalCode("1111111112")
+                    .type(HomeType.APARTMENT)
+                    .status(HomeStatus.SOLD)
+                    .area(85.0)
+                    .numberOfRooms(2)
+                    .floor(3)
+                    .totalFloors(6)
+                    .yearBuilt(2017)
+                    .hasParking(true)
+                    .hasElevator(true)
+                    .hasStorage(false)
+                    .hasBalcony(true)
+                    .hasPool(false)
+                    .hasGym(false)
+                    .price(7500000000L)
+                    .description("Affordable apartment in good neighborhood, already sold for testing.")
+                    .user(user2)
+                    .deleted(false)
+                    .build();
+            homeRepository.save(home14);
+
+            Home home15 = Home.builder()
+                    .address("Qeshm Island, Zeytoon Complex, Unit 45")
+                    .city("Qeshm")
+                    .state("Hormozgan")
+                    .postalCode("1212121212")
+                    .type(HomeType.APARTMENT)
+                    .status(HomeStatus.RESERVED)
+                    .area(90.0)
+                    .numberOfRooms(2)
+                    .floor(1)
+                    .totalFloors(4)
+                    .yearBuilt(2021)
+                    .hasParking(true)
+                    .hasElevator(false)
+                    .hasStorage(false)
+                    .hasBalcony(true)
+                    .hasPool(true)
+                    .hasGym(false)
+                    .price(15000000000L)
+                    .description("Beautiful apartment in Qeshm, close to beach, currently reserved.")
+                    .user(admin)
+                    .deleted(false)
+                    .build();
+            homeRepository.save(home15);
+
+            Home home16 = Home.builder()
+                    .address("Hamedan, Abbasabad Square, Building 23")
+                    .city("Hamedan")
+                    .state("Hamedan")
+                    .postalCode("1313131313")
+                    .type(HomeType.STUDIO)
+                    .status(HomeStatus.AVAILABLE)
+                    .area(40.0)
+                    .numberOfRooms(1)
+                    .floor(2)
+                    .totalFloors(3)
+                    .yearBuilt(2016)
+                    .hasParking(false)
+                    .hasElevator(false)
+                    .hasStorage(false)
+                    .hasBalcony(false)
+                    .hasPool(false)
+                    .hasGym(false)
+                    .price(2800000000L)
+                    .description("Small studio apartment, budget-friendly option.")
+                    .user(user1)
+                    .deleted(false)
+                    .build();
+            homeRepository.save(home16);
+
+            Home home17 = Home.builder()
+                    .address("Bandar Abbas, Golshahr, Phase 2, Villa 12")
+                    .city("Bandar Abbas")
+                    .state("Hormozgan")
+                    .postalCode("1414141414")
+                    .type(HomeType.VILLA)
+                    .status(HomeStatus.AVAILABLE)
+                    .area(180.0)
+                    .numberOfRooms(3)
+                    .floor(0)
+                    .totalFloors(1)
+                    .yearBuilt(2019)
+                    .hasParking(true)
+                    .hasElevator(false)
+                    .hasStorage(true)
+                    .hasBalcony(true)
+                    .hasPool(false)
+                    .hasGym(false)
+                    .price(12000000000L)
+                    .description("Comfortable villa in southern Iran with large yard.")
+                    .user(user2)
+                    .deleted(false)
+                    .build();
+            homeRepository.save(home17);
+
+            log.info("✅ Homes initialized (17 properties total)");
         }
     }
 
