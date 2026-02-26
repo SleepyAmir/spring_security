@@ -1,5 +1,6 @@
 package com.mftplus.spring_security.home.model.entity;
 
+import com.mftplus.spring_security.core.model.Purchasable;
 import com.mftplus.spring_security.core.model.User; // ⚠️ تغییر از Person
 import com.mftplus.spring_security.home.model.enums.HomeStatus;
 import com.mftplus.spring_security.home.model.enums.HomeType;
@@ -20,7 +21,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
-public class Home {
+public class Home implements Purchasable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -148,5 +149,15 @@ public class Home {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    @Override
+    public String getName() {
+        return "Home in " + city + " - " + type;
+    }
+
+    @Override
+    public Double getPrice() {
+        return price != null ? price.doubleValue() : 0.0;
     }
 }
