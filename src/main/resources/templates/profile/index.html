@@ -49,19 +49,19 @@
         <!-- Navigation Tabs -->
         <ul class="nav nav-tabs mb-4">
             <li class="nav-item">
-                <a class="nav-link" th:classappend="${activeTab == 'accounts'} ? 'active' : ''" 
+                <a class="nav-link" th:classappend="${activeTab == 'accounts'} ? 'active' : ''"
                    th:href="@{/profile}">حساب‌های بانکی</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" th:classappend="${activeTab == 'products'} ? 'active' : ''" 
+                <a class="nav-link" th:classappend="${activeTab == 'products'} ? 'active' : ''"
                    th:href="@{/profile/products}">کالاها</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" th:classappend="${activeTab == 'homes'} ? 'active' : ''" 
+                <a class="nav-link" th:classappend="${activeTab == 'homes'} ? 'active' : ''"
                    th:href="@{/profile/homes}">خانه‌ها</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" th:classappend="${activeTab == 'purchases'} ? 'active' : ''" 
+                <a class="nav-link" th:classappend="${activeTab == 'purchases'} ? 'active' : ''"
                    th:href="@{/profile/my-purchases}">خریدهای من</a>
             </li>
         </ul>
@@ -80,7 +80,7 @@
         <div class="row">
             <div class="col-12">
                 <h4 class="mb-3">حساب‌های بانکی شما</h4>
-                
+
                 <div th:if="${accounts.isEmpty()}" class="alert alert-info">
                     شما هیچ حساب بانکی ندارید.
                 </div>
@@ -111,7 +111,7 @@
                         <li class="page-item" th:classappend="${accounts.first} ? 'disabled'">
                             <a class="page-link" th:href="@{/profile(page=${accounts.number - 1})}">قبلی</a>
                         </li>
-                        <li class="page-item" th:each="i : ${#numbers.sequence(0, accounts.totalPages - 1)}" 
+                        <li class="page-item" th:each="i : ${#numbers.sequence(0, accounts.totalPages - 1)}"
                             th:classappend="${i == accounts.number} ? 'active'">
                             <a class="page-link" th:href="@{/profile(page=${i})}" th:text="${i + 1}"></a>
                         </li>
