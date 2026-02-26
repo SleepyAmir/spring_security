@@ -58,102 +58,103 @@
     </style>
 </head>
 <body>
-    <div class="container mt-4">
-        <!-- Header -->
-        <div class="profile-header">
-            <h2>خوش آمدید، <span th:text="${username}"></span></h2>
-            <p>لیست خانه‌ها برای خرید</p>
+<div class="container mt-4">
+    <!-- Header -->
+    <div class="profile-header">
+        <h2>خوش آمدید، <span th:text="${username}"></span></h2>
+        <p>لیست خانه‌ها برای خرید</p>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <ul class="nav nav-tabs mb-4">
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/profile}">حساب‌های بانکی</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/profile/products}">کالاها</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" th:href="@{/profile/homes}">خانه‌ها</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/profile/my-purchases}">خریدهای من</a>
+        </li>
+    </ul>
+
+    <!-- Alert Messages -->
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show">
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show">
+        <span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Homes List -->
+    <div class="row">
+        <div th:if="${homes.isEmpty()}" class="col-12">
+            <div class="alert alert-info">هیچ خانه‌ای موجود نیست.</div>
         </div>
 
-        <!-- Navigation Tabs -->
-        <ul class="nav nav-tabs mb-4">
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/profile}">حساب‌های بانکی</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/profile/products}">کالاها</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link active" th:href="@{/profile/homes}">خانه‌ها</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/profile/my-purchases}">خریدهای من</a>
-            </li>
-        </ul>
-
-        <!-- Alert Messages -->
-        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show">
-            <span th:text="${successMessage}"></span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show">
-            <span th:text="${errorMessage}"></span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-
-        <!-- Homes List -->
-        <div class="row">
-            <div th:if="${homes.isEmpty()}" class="col-12">
-                <div class="alert alert-info">هیچ خانه‌ای موجود نیست.</div>
-            </div>
-
-            <div th:each="home : ${homes}" class="col-12">
-                <div class="home-card">
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <h5 th:text="${home.type}">نوع ملک</h5>
-                                <span class="status-badge" 
-                                      th:classappend="${home.status == T(com.mftplus.spring_security.home.model.enums.HomeStatus).AVAILABLE} ? 'status-available' :
-                                                       ${home.status == T(com.mftplus.spring_security.home.model.enums.HomeStatus).RESERVED} ? 'status-reserved' : 'status-sold'"
-                                      th:text="${home.status}">
+        <div th:each="home : ${homes}" class="col-12">
+            <div class="home-card">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 th:text="${home.type}">نوع ملک</h5>
+                            <!-- ✅ تصحیح شده -->
+                            <span class="status-badge"
+                                  th:classappend="${home.status.name() == 'AVAILABLE'} ? 'status-available' : (${home.status.name() == 'RESERVED'} ? 'status-reserved' : 'status-sold')"
+                                  th:text="${home.status}">
                                 </span>
-                            </div>
-                            <p class="text-muted mb-2">
-                                <strong>آدرس:</strong> <span th:text="${home.address} + ', ' + ${home.city} + ', ' + ${home.state}"></span>
-                            </p>
-                            <p class="text-muted mb-2" th:if="${home.description}">
-                                <span th:text="${home.description}"></span>
-                            </p>
-                            <div class="home-specs">
-                                <span class="spec-badge">متراژ: <span th:text="${home.area}"></span> متر</span>
-                                <span class="spec-badge"><span th:text="${home.numberOfRooms}"></span> اتاق</span>
-                                <span class="spec-badge">طبقه <span th:text="${home.floor}"></span> از <span th:text="${home.totalFloors}"></span></span>
-                                <span class="spec-badge" th:if="${home.hasParking}">پارکینگ</span>
-                                <span class="spec-badge" th:if="${home.hasElevator}">آسانسور</span>
-                                <span class="spec-badge" th:if="${home.hasBalcony}">بالکن</span>
-                            </div>
                         </div>
-                        <div class="col-md-4 text-end">
-                            <p class="price-tag mb-3" th:text="${#numbers.formatDecimal(home.price, 0, 'COMMA', 0, 'POINT')} + ' ریال'"></p>
-                            <a th:if="${home.status == T(com.mftplus.spring_security.home.model.enums.HomeStatus).AVAILABLE}"
-                               th:href="@{/profile/homes/{id}/purchase(id=${home.id})}" 
-                               class="btn btn-primary">خرید</a>
-                            <button th:unless="${home.status == T(com.mftplus.spring_security.home.model.enums.HomeStatus).AVAILABLE}"
-                                    class="btn btn-secondary" disabled>غیر قابل خرید</button>
+                        <p class="text-muted mb-2">
+                            <strong>آدرس:</strong> <span th:text="${home.address} + ', ' + ${home.city} + ', ' + ${home.state}"></span>
+                        </p>
+                        <p class="text-muted mb-2" th:if="${home.description}">
+                            <span th:text="${home.description}"></span>
+                        </p>
+                        <div class="home-specs">
+                            <span class="spec-badge">متراژ: <span th:text="${home.area}"></span> متر</span>
+                            <span class="spec-badge"><span th:text="${home.numberOfRooms}"></span> اتاق</span>
+                            <span class="spec-badge">طبقه <span th:text="${home.floor}"></span> از <span th:text="${home.totalFloors}"></span></span>
+                            <span class="spec-badge" th:if="${home.hasParking}">پارکینگ</span>
+                            <span class="spec-badge" th:if="${home.hasElevator}">آسانسور</span>
+                            <span class="spec-badge" th:if="${home.hasBalcony}">بالکن</span>
                         </div>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <p class="price-tag mb-3" th:text="${#numbers.formatDecimal(home.price, 0, 'COMMA', 0, 'POINT')} + ' ریال'"></p>
+                        <!-- ✅ تصحیح شده -->
+                        <a th:if="${home.status.name() == 'AVAILABLE'}"
+                           th:href="@{/profile/homes/{id}/purchase(id=${home.id})}"
+                           class="btn btn-primary">خرید</a>
+                        <button th:unless="${home.status.name() == 'AVAILABLE'}"
+                                class="btn btn-secondary" disabled>غیر قابل خرید</button>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Pagination -->
-        <nav th:if="${homes.totalPages > 1}" class="mt-4">
-            <ul class="pagination justify-content-center">
-                <li class="page-item" th:classappend="${homes.first} ? 'disabled'">
-                    <a class="page-link" th:href="@{/profile/homes(page=${homes.number - 1})}">قبلی</a>
-                </li>
-                <li class="page-item" th:each="i : ${#numbers.sequence(0, homes.totalPages - 1)}" 
-                    th:classappend="${i == homes.number} ? 'active'">
-                    <a class="page-link" th:href="@{/profile/homes(page=${i})}" th:text="${i + 1}"></a>
-                </li>
-                <li class="page-item" th:classappend="${homes.last} ? 'disabled'">
-                    <a class="page-link" th:href="@{/profile/homes(page=${homes.number + 1})}">بعدی</a>
-                </li>
-            </ul>
-        </nav>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Pagination -->
+    <nav th:if="${homes.totalPages > 1}" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${homes.first} ? 'disabled'">
+                <a class="page-link" th:href="@{/profile/homes(page=${homes.number - 1})}">قبلی</a>
+            </li>
+            <li class="page-item" th:each="i : ${#numbers.sequence(0, homes.totalPages - 1)}"
+                th:classappend="${i == homes.number} ? 'active'">
+                <a class="page-link" th:href="@{/profile/homes(page=${i})}" th:text="${i + 1}"></a>
+            </li>
+            <li class="page-item" th:classappend="${homes.last} ? 'disabled'">
+                <a class="page-link" th:href="@{/profile/homes(page=${homes.number + 1})}">بعدی</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
