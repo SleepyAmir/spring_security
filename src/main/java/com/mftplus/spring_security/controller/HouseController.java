@@ -1,6 +1,7 @@
 package com.mftplus.spring_security.controller;
 
-import com.mftplus.spring_security.core.service.PersonService;
+import com.mftplus.spring_security.core.security.SecurityUser;
+import com.mftplus.spring_security.core.service.UserService;
 import com.mftplus.spring_security.home.dto.HomeDto;
 import com.mftplus.spring_security.home.model.enums.HomeStatus;
 import com.mftplus.spring_security.home.model.enums.HomeType;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,8 +24,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequiredArgsConstructor
 public class HouseController {
 
-    private final HomeService   homeService;
-    private final PersonService personService;
+    private final HomeService homeService;
+    private final UserService userService; // ⚠️ تغییر از PersonService
+
+    // ⚠️ متد کمکی برای گرفتن userId
+    private Long getCurrentUserId(Authentication authentication) {
+        if (authentication != null && authentication.getPrincipal() instanceof SecurityUser) {
+            return ((SecurityUser) authentication.getPrincipal()).getId();
+        }
+        return null;
+    }
 
     @GetMapping
     public String list(Model model,
@@ -58,9 +68,24 @@ public class HouseController {
 
     @PostMapping("/create")
     public String create(@Valid @ModelAttribute("homeDto") HomeDto dto,
-                         BindingResult br, Model model,
+                         BindingResult br,
+                         Model model,
+                         Authentication authentication,
                          RedirectAttributes ra) {
-        if (br.hasErrors()) { addFormData(model); return "home/form"; }
+        if (br.hasErrors()) {
+            addFormData(model);
+            return "home/form";
+        }
+
+        // ⚠️ اگر userId در DTO نیست، از کاربر لاگین شده بگیر
+        if (dto.getUserId() == null) {
+            Long userId = getCurrentUserId(authentication);
+            if (userId == null) {
+                return "redirect:/login";
+            }
+            dto.setUserId(userId);
+        }
+
         homeService.save(dto);
         ra.addFlashAttribute("successMessage", "Home created successfully.");
         return "redirect:/homes";
@@ -76,14 +101,17 @@ public class HouseController {
     @PostMapping("/edit/{id}")
     public String update(@PathVariable Long id,
                          @Valid @ModelAttribute("homeDto") HomeDto dto,
-                         BindingResult br, Model model,
+                         BindingResult br,
+                         Model model,
                          RedirectAttributes ra) {
-        if (br.hasErrors()) { addFormData(model); return "home/form"; }
+        if (br.hasErrors()) {
+            addFormData(model);
+            return "home/form";
+        }
         homeService.update(id, dto);
         ra.addFlashAttribute("successMessage", "Home updated successfully.");
         return "redirect:/homes";
     }
-
 
     @GetMapping("/view/{id}")
     public String view(@PathVariable Long id, Model model) {
@@ -134,18 +162,19 @@ public class HouseController {
         return "redirect:/homes";
     }
 
-    @GetMapping("/person/{personId}")
-    public String byPerson(@PathVariable Long personId, Model model,
-                           @RequestParam(defaultValue = "0")  int page,
-                           @RequestParam(defaultValue = "10") int size) {
-        model.addAttribute("homes", homeService.findAllByPersonId(personId,
+    // ⚠️ تغییر از personId به userId
+    @GetMapping("/user/{userId}")
+    public String byUser(@PathVariable Long userId, Model model,
+                         @RequestParam(defaultValue = "0")  int page,
+                         @RequestParam(defaultValue = "10") int size) {
+        model.addAttribute("homes", homeService.findAllByUserId(userId,
                 PageRequest.of(page, size, Sort.by("createdAt").descending())));
         addEnums(model);
         return "home/list";
     }
 
     private void addFormData(Model model) {
-        model.addAttribute("persons", personService.findAllActive());
+        model.addAttribute("users", userService.findAll()); // ⚠️ تغییر از persons
         addEnums(model);
     }
 
