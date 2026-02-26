@@ -1,7 +1,7 @@
 package com.mftplus.spring_security.home.service;
 
-import com.mftplus.spring_security.core.model.Person;
-import com.mftplus.spring_security.core.repository.PersonRepository;
+import com.mftplus.spring_security.core.model.User; // ⚠️ تغییر از Person
+import com.mftplus.spring_security.core.repository.UserRepository; // ⚠️ تغییر از PersonRepository
 import com.mftplus.spring_security.home.dto.HomeDto;
 import com.mftplus.spring_security.home.exception.*;
 import com.mftplus.spring_security.home.mapper.HomeMapper;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 public class HomeServiceImpl implements HomeService {
 
     private final HomeRepository homeRepository;
-    private final PersonRepository personRepository;
+    private final UserRepository userRepository; // ⚠️ تغییر
     private final HomeMapper homeMapper;
 
     @Override
@@ -34,7 +34,7 @@ public class HomeServiceImpl implements HomeService {
     public void save(HomeDto dto) {
         validate(dto);
         Home home = homeMapper.toEntity(dto);
-        home.setPerson(findOwner(dto.getPersonId()));
+        home.setUser(findOwner(dto.getUserId())); // ⚠️ تغییر
         homeRepository.save(home);
         log.info("Home saved id={}", home.getId());
     }
@@ -45,8 +45,8 @@ public class HomeServiceImpl implements HomeService {
         Home home = findEntity(id);
         if (home.getStatus() == HomeStatus.SOLD) throw new HomeAlreadySoldException(id);
         validate(dto);
-        if (!home.getPerson().getId().equals(dto.getPersonId()))
-            home.setPerson(findOwner(dto.getPersonId()));
+        if (!home.getUser().getId().equals(dto.getUserId())) // ⚠️ تغییر
+            home.setUser(findOwner(dto.getUserId())); // ⚠️ تغییر
         homeMapper.updateFromDto(dto, home);
         homeRepository.save(home);
         log.info("Home updated id={}", id);
@@ -70,44 +70,77 @@ public class HomeServiceImpl implements HomeService {
     @Override
     @Transactional(readOnly = true)
     public HomeDto findById(Long id) {
-        return homeMapper.toDto(findEntity(id));
+        Home home = findEntity(id);
+        HomeDto dto = homeMapper.toDto(home);
+        enrichDto(dto, home); // ⚠️ اضافه شد
+        return dto;
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<HomeDto> findAll(Pageable pageable) {
-        return homeRepository.findAll(pageable).map(homeMapper::toDto);
+        return homeRepository.findAll(pageable)
+                .map(home -> {
+                    HomeDto dto = homeMapper.toDto(home);
+                    enrichDto(dto, home); // ⚠️ اضافه شد
+                    return dto;
+                });
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<HomeDto> findAllByPersonId(Long personId) {
-        return homeRepository.findAllByPersonId(personId).stream()
-                .map(homeMapper::toDto).collect(Collectors.toList());
+    public List<HomeDto> findAllByUserId(Long userId) { // ⚠️ تغییر نام
+        return homeRepository.findAllByUserId(userId).stream() // ⚠️ تغییر
+                .map(home -> {
+                    HomeDto dto = homeMapper.toDto(home);
+                    enrichDto(dto, home); // ⚠️ اضافه شد
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<HomeDto> findAllByPersonId(Long personId, Pageable pageable) {
-        return homeRepository.findAllByPersonId(personId, pageable).map(homeMapper::toDto);
+    public Page<HomeDto> findAllByUserId(Long userId, Pageable pageable) { // ⚠️ تغییر نام
+        return homeRepository.findAllByUserId(userId, pageable) // ⚠️ تغییر
+                .map(home -> {
+                    HomeDto dto = homeMapper.toDto(home);
+                    enrichDto(dto, home); // ⚠️ اضافه شد
+                    return dto;
+                });
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<HomeDto> findAllByStatus(HomeStatus status, Pageable pageable) {
-        return homeRepository.findAllByStatus(status, pageable).map(homeMapper::toDto);
+        return homeRepository.findAllByStatus(status, pageable)
+                .map(home -> {
+                    HomeDto dto = homeMapper.toDto(home);
+                    enrichDto(dto, home); // ⚠️ اضافه شد
+                    return dto;
+                });
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<HomeDto> findAllDeleted(Pageable pageable) {
-        return homeRepository.findAllDeleted(pageable).map(homeMapper::toDto);
+        return homeRepository.findAllDeleted(pageable)
+                .map(home -> {
+                    HomeDto dto = homeMapper.toDto(home);
+                    enrichDto(dto, home); // ⚠️ اضافه شد
+                    return dto;
+                });
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<HomeDto> findAllByFilter(String city, String state, HomeStatus status, HomeType type, Pageable pageable) {
-        return homeRepository.findAllByFilter(city, state, status, type, pageable).map(homeMapper::toDto);
+        return homeRepository.findAllByFilter(city, state, status, type, pageable)
+                .map(home -> {
+                    HomeDto dto = homeMapper.toDto(home);
+                    enrichDto(dto, home); // ⚠️ اضافه شد
+                    return dto;
+                });
     }
 
     @Override
@@ -118,7 +151,10 @@ public class HomeServiceImpl implements HomeService {
         if (home.getStatus() != HomeStatus.AVAILABLE && home.getStatus() != HomeStatus.RESERVED)
             throw new HomeNotAvailableException(id, home.getStatus());
         home.setStatus(HomeStatus.SOLD);
-        return homeMapper.toDto(homeRepository.save(home));
+        Home saved = homeRepository.save(home);
+        HomeDto dto = homeMapper.toDto(saved);
+        enrichDto(dto, saved); // ⚠️ اضافه شد
+        return dto;
     }
 
     @Override
@@ -127,7 +163,10 @@ public class HomeServiceImpl implements HomeService {
         Home home = findEntity(id);
         if (home.getStatus() == HomeStatus.SOLD) throw new HomeAlreadySoldException(id);
         home.setStatus(HomeStatus.AVAILABLE);
-        return homeMapper.toDto(homeRepository.save(home));
+        Home saved = homeRepository.save(home);
+        HomeDto dto = homeMapper.toDto(saved);
+        enrichDto(dto, saved); // ⚠️ اضافه شد
+        return dto;
     }
 
     @Override
@@ -138,7 +177,10 @@ public class HomeServiceImpl implements HomeService {
         if (home.getStatus() != HomeStatus.AVAILABLE)
             throw new HomeNotAvailableException(id, home.getStatus());
         home.setStatus(HomeStatus.RESERVED);
-        return homeMapper.toDto(homeRepository.save(home));
+        Home saved = homeRepository.save(home);
+        HomeDto dto = homeMapper.toDto(saved);
+        enrichDto(dto, saved); // ⚠️ اضافه شد
+        return dto;
     }
 
     // ─── Private Helpers ──────────────────────────────────────────────────────
@@ -147,8 +189,25 @@ public class HomeServiceImpl implements HomeService {
         return homeRepository.findById(id).orElseThrow(() -> new HomeNotFoundException(id));
     }
 
-    private Person findOwner(Long personId) {
-        return personRepository.findById(personId).orElseThrow(() -> new HomeOwnerNotFoundException(personId));
+    // ⚠️ تغییر از Person به User
+    private User findOwner(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new HomeOwnerNotFoundException(userId));
+    }
+
+    // ⚠️ متد جدید برای پر کردن userFullName
+    private void enrichDto(HomeDto dto, Home home) {
+        if (home.getUser() != null) {
+            dto.setUserId(home.getUser().getId());
+
+            // نام کامل کاربر
+            if (home.getUser().getPerson() != null) {
+                String fullName = home.getUser().getPerson().getFirstName() + " " +
+                        home.getUser().getPerson().getLastName();
+                dto.setUserFullName(fullName);
+            } else {
+                dto.setUserFullName(home.getUser().getUsername());
+            }
+        }
     }
 
     private void validate(HomeDto dto) {

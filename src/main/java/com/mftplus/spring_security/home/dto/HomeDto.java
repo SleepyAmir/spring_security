@@ -75,8 +75,9 @@ public class HomeDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    // ⚠️ تغییرات
     @NotNull(message = "Owner is required")
-    private Long personId;
+    private Long userId; // تغییر از personId
 
-    private String personFullName;
+    private String userFullName; // تغییر از personFullName
 }

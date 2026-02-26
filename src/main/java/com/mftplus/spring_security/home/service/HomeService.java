@@ -17,8 +17,11 @@ public interface HomeService {
 
     HomeDto         findById(Long id);
     Page<HomeDto>   findAll(Pageable pageable);
-    List<HomeDto>   findAllByPersonId(Long personId);
-    Page<HomeDto>   findAllByPersonId(Long personId, Pageable pageable);
+
+    // ⚠️ تغییر از PersonId به UserId
+    List<HomeDto>   findAllByUserId(Long userId);
+    Page<HomeDto>   findAllByUserId(Long userId, Pageable pageable);
+
     Page<HomeDto>   findAllByStatus(HomeStatus status, Pageable pageable);
     Page<HomeDto>   findAllDeleted(Pageable pageable);
     Page<HomeDto>   findAllByFilter(String city, String state, HomeStatus status, HomeType type, Pageable pageable);

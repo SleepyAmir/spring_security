@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ProductService {
 
-    ProductDto save(ProductDto productDto);
+    ProductDto save(ProductDto productDto, Long userId); // ⚠️ userId اضافه شد
 
     ProductDto update(ProductDto productDto);
 
@@ -20,6 +20,10 @@ public interface ProductService {
 
     Page<ProductDto> findAll(Pageable pageable);
 
+    // ⚠️ متدهای جدید
+    List<ProductDto> findByUserId(Long userId);
+    Page<ProductDto> findByUserId(Long userId, Pageable pageable);
+
     Page<ProductDto> findAllDeleted(Pageable pageable);
 
     Page<ProductDto> findAllEvenDeleted(Pageable pageable);
@@ -27,6 +31,4 @@ public interface ProductService {
     void restoreById(Long id);
 
     Page<ProductDto> findByName(String name, Pageable pageable);
-
-    Page<ProductDto> findByUsername(String username, Pageable pageable);
 }

@@ -1,6 +1,6 @@
 package com.mftplus.spring_security.home.model.entity;
 
-import com.mftplus.spring_security.core.model.Person;
+import com.mftplus.spring_security.core.model.User; // ⚠️ تغییر از Person
 import com.mftplus.spring_security.home.model.enums.HomeStatus;
 import com.mftplus.spring_security.home.model.enums.HomeType;
 import jakarta.persistence.*;
@@ -125,11 +125,12 @@ public class Home {
     @Builder.Default
     private boolean deleted = false;
 
+    // ⚠️⚠️⚠️ تنها تغییر مهم اینجاست
     @NotNull(message = "Owner is required")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "person_id", nullable = false,
-            foreignKey = @ForeignKey(name = "fk_home_person"))
-    private Person person;
+    @JoinColumn(name = "user_id", nullable = false, // تغییر از person_id
+            foreignKey = @ForeignKey(name = "fk_home_user")) // تغییر نام constraint
+    private User user; // تغییر از Person person
 
     @PrePersist
     protected void onCreate() {

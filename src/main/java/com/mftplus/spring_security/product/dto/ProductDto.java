@@ -20,6 +20,10 @@ public class ProductDto {
 
     private boolean deleted = false;
 
-    @Pattern(regexp = "^[a-zA-Z\\s]{3,20}$", message = "Invalid username (only letters and spaces, 3-20 chars)")
+    // ⚠️ فیلدهای مربوط به User اضافه شد
+    private Long userId;
+
     private String username;
+
+    private String userFullName;
 }

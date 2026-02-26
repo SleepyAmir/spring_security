@@ -17,9 +17,9 @@ import java.util.List;
 @Repository
 public interface HomeRepository extends JpaRepository<Home, Long> {
 
-    List<Home> findAllByPersonId(Long personId);
-
-    Page<Home> findAllByPersonId(Long personId, Pageable pageable);
+    // ⚠️ تغییر از PersonId به UserId
+    List<Home> findAllByUserId(Long userId);
+    Page<Home> findAllByUserId(Long userId, Pageable pageable);
 
     Page<Home> findAllByStatus(HomeStatus status, Pageable pageable);
 
