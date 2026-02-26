@@ -1,7 +1,9 @@
-package com.mftplus.spring_security.Purchase;
+package com.mftplus.spring_security.purchase.model;
 
 import com.mftplus.spring_security.bankAccount.model.entity.BankAccount;
 import com.mftplus.spring_security.core.model.User;
+import com.mftplus.spring_security.home.model.entity.Home;
+import com.mftplus.spring_security.product.model.Product;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,10 +11,10 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "purchases")
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class Purchase {
 
@@ -29,13 +31,9 @@ public class Purchase {
     @Column(nullable = false)
     private Double price;
 
-    // ⚠️ ساده: فقط نام محصول/خانه
-    @Column(nullable = false, length = 255)
-    private String itemName;
-
-    // ⚠️ ساده: فقط TYPE (PRODUCT یا HOME)
+    // ⚠️ نوع خرید: PRODUCT یا HOME
     @Column(nullable = false, length = 20)
-    private String purchaseType; // "PRODUCT" or "HOME"
+    private String purchaseType;
 
     // خریدار
     @ManyToOne(fetch = FetchType.LAZY)
@@ -46,6 +44,16 @@ public class Purchase {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bank_account_id", nullable = false)
     private BankAccount bankAccount;
+
+    // ⚠️ ارتباط با Product (اختیاری)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+    // ⚠️ ارتباط با Home (اختیاری)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "home_id")
+    private Home home;
 
     @PrePersist
     protected void onCreate() {
