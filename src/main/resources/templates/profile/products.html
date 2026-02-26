@@ -1,110 +1,109 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>کالاها</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Tahoma', sans-serif;
-            background-color: #f8f9fa;
-        }
-        .profile-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 2rem;
-            border-radius: 10px;
-            margin-bottom: 2rem;
-        }
-        .product-card {
-            border: 1px solid #dee2e6;
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            background: white;
-            transition: all 0.3s;
-        }
-        .product-card:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            transform: translateY(-3px);
-        }
-        .price-tag {
-            font-size: 1.5rem;
-            color: #28a745;
-            font-weight: bold;
-        }
+        :root{--bg0:#080C16;--bg1:#0D1120;--bg2:#111827;--bg3:#161F30;--glass:rgba(255,255,255,0.04);--border:rgba(255,255,255,0.07);--border2:rgba(99,179,237,0.22);--blue:#3B82F6;--blue2:#60A5FA;--green:#10B981;--yellow:#F59E0B;--red:#EF4444;--cyan:#06B6D4;--t1:#EFF6FF;--t2:#94A3B8;--t3:#4B5675;--g1:linear-gradient(135deg,#1D4ED8,#2563EB);--sh:0 4px 24px rgba(0,0,0,0.5);--shb:0 4px 16px rgba(59,130,246,0.32);--r:14px;--rs:8px;--tr:all 0.25s cubic-bezier(0.4,0,0.2,1);}
+        *{box-sizing:border-box;}
+        body{font-family:'Vazirmatn',sans-serif;background:var(--bg0);color:var(--t1);direction:rtl;text-align:right;min-height:100vh;background-image:radial-gradient(ellipse at 15% 40%,rgba(59,130,246,0.05) 0%,transparent 55%);}
+        .top-bar{background:rgba(8,12,22,0.96);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);height:60px;display:flex;align-items:center;padding:0 1.5rem;position:sticky;top:0;z-index:100;}
+        .top-bar-brand{font-weight:800;font-size:1rem;color:var(--t1);display:flex;align-items:center;gap:0.6rem;text-decoration:none;}
+        .brand-logo{width:32px;height:32px;background:var(--g1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.85rem;color:white;}
+        .top-bar-back{display:flex;align-items:center;gap:0.4rem;font-size:0.835rem;font-weight:500;color:var(--t3);text-decoration:none;margin-right:auto;padding:0.35rem 0.75rem;border:1px solid var(--border);border-radius:var(--rs);transition:var(--tr);}
+        .top-bar-back:hover{color:var(--t1);border-color:var(--border2);}
+        .page-wrap{max-width:1100px;margin:0 auto;padding:2rem 1.5rem;animation:fadeInUp 0.35s ease forwards;}
+        .hero{background:linear-gradient(135deg,rgba(29,78,216,0.18) 0%,rgba(37,99,235,0.08) 100%);border:1px solid rgba(59,130,246,0.18);border-radius:18px;padding:1.75rem 2rem;margin-bottom:2rem;position:relative;overflow:hidden;}
+        .hero::before{content:"";position:absolute;top:-30px;left:-30px;width:120px;height:120px;background:rgba(59,130,246,0.08);border-radius:50%;}
+        .hero-label{font-size:0.75rem;font-weight:700;color:rgba(96,165,250,0.7);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.35rem;position:relative;}
+        .hero-title{font-size:1.5rem;font-weight:800;color:var(--t1);letter-spacing:-0.03em;position:relative;}
+        .hero-sub{font-size:0.875rem;color:var(--t3);margin-top:0.25rem;position:relative;}
+        .tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:1.75rem;overflow-x:auto;}
+        .tab-link{display:flex;align-items:center;gap:0.4rem;padding:0.75rem 1.25rem;font-size:0.845rem;font-weight:600;color:var(--t3);text-decoration:none;border-bottom:2px solid transparent;transition:var(--tr);white-space:nowrap;}
+        .tab-link:hover{color:var(--t2);}
+        .tab-link.active{color:var(--blue2);border-bottom-color:var(--blue);}
+        .alert{border-radius:var(--r);border:1px solid;font-size:0.875rem;font-weight:500;padding:0.875rem 1rem;display:flex;align-items:center;gap:0.5rem;margin-bottom:1.25rem;}
+        .alert-success{background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.25);color:#34D399;}
+        .alert-danger{background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.25);color:#F87171;}
+        .alert-info{background:rgba(6,182,212,0.1);border-color:rgba(6,182,212,0.25);color:#22D3EE;}
+        .btn-close{filter:invert(1) brightness(0.5);cursor:pointer;}
+        .product-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;transition:var(--tr);display:flex;flex-direction:column;gap:0.75rem;}
+        .product-card:hover{border-color:var(--border2);transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,0.4);}
+        .product-icon{width:48px;height:48px;background:linear-gradient(135deg,rgba(16,185,129,0.15),rgba(5,150,105,0.08));border:1px solid rgba(16,185,129,0.2);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;color:var(--green);}
+        .product-name{font-size:1.05rem;font-weight:700;color:var(--t1);}
+        .product-desc{font-size:0.85rem;color:var(--t3);flex:1;line-height:1.5;}
+        .product-price{font-size:1.3rem;font-weight:800;color:var(--green);}
+        .product-seller{font-size:0.78rem;color:var(--t3);}
+        .btn{font-family:'Vazirmatn',sans-serif;font-weight:600;border-radius:var(--rs);font-size:0.875rem;transition:var(--tr);border:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:0.4rem;text-decoration:none;padding:0.7rem 1.25rem;width:100%;}
+        .btn-primary{background:var(--g1);color:white;box-shadow:var(--shb);}
+        .btn-primary:hover{transform:translateY(-2px);color:white;filter:brightness(1.1);}
+        .pagination{display:flex;gap:0.35rem;justify-content:center;margin-top:1.5rem;padding:0;list-style:none;}
+        .page-item .page-link{display:flex;align-items:center;justify-content:center;width:36px;height:36px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--t2);font-size:0.875rem;text-decoration:none;transition:var(--tr);}
+        .page-item.active .page-link,.page-item .page-link:hover{background:var(--blue);border-color:var(--blue);color:white;}
+        .page-item.disabled .page-link{opacity:0.4;cursor:default;}
+        @keyframes fadeInUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
     </style>
 </head>
 <body>
-    <div class="container mt-4">
-        <!-- Header -->
-        <div class="profile-header">
-            <h2>خوش آمدید، <span th:text="${username}"></span></h2>
-            <p>لیست کالاها برای خرید</p>
-        </div>
-
-        <!-- Navigation Tabs -->
-        <ul class="nav nav-tabs mb-4">
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/profile}">حساب‌های بانکی</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link active" th:href="@{/profile/products}">کالاها</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/profile/homes}">خانه‌ها</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/profile/my-purchases}">خریدهای من</a>
-            </li>
-        </ul>
-
-        <!-- Alert Messages -->
-        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show">
-            <span th:text="${successMessage}"></span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show">
-            <span th:text="${errorMessage}"></span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-
-        <!-- Products List -->
-        <div class="row">
-            <div th:if="${products.isEmpty()}" class="col-12">
-                <div class="alert alert-info">هیچ کالایی موجود نیست.</div>
-            </div>
-
-            <div th:each="product : ${products}" class="col-md-6 col-lg-4">
-                <div class="product-card">
-                    <h5 th:text="${product.name}">نام کالا</h5>
-                    <p class="text-muted" th:text="${product.description}">توضیحات کالا</p>
-                    <p class="price-tag" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' ریال'"></p>
-                    <p class="text-muted small">فروشنده: <span th:text="${product.username}"></span></p>
-                    <a th:href="@{/profile/products/{id}/purchase(id=${product.id})}" 
-                       class="btn btn-primary w-100">خرید</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Pagination -->
-        <nav th:if="${products.totalPages > 1}" class="mt-4">
-            <ul class="pagination justify-content-center">
-                <li class="page-item" th:classappend="${products.first} ? 'disabled'">
-                    <a class="page-link" th:href="@{/profile/products(page=${products.number - 1})}">قبلی</a>
-                </li>
-                <li class="page-item" th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}" 
-                    th:classappend="${i == products.number} ? 'active'">
-                    <a class="page-link" th:href="@{/profile/products(page=${i})}" th:text="${i + 1}"></a>
-                </li>
-                <li class="page-item" th:classappend="${products.last} ? 'disabled'">
-                    <a class="page-link" th:href="@{/profile/products(page=${products.number + 1})}">بعدی</a>
-                </li>
-            </ul>
-        </nav>
+<div class="top-bar">
+    <a class="top-bar-brand" href="/dashboard"><div class="brand-logo"><i class="bi bi-shield-fill-check"></i></div> سیستم مدیریت</a>
+    <a href="/dashboard" class="top-bar-back"><i class="bi bi-house-fill"></i> داشبورد</a>
+</div>
+<div class="page-wrap">
+    <div class="hero">
+        <div class="hero-label">فروشگاه</div>
+        <div class="hero-title" th:text="'خوش آمدید، ' + ${username}">خوش آمدید</div>
+        <div class="hero-sub">لیست کالاها برای خرید</div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="tabs">
+        <a class="tab-link" th:href="@{/profile}"><i class="bi bi-bank"></i> حساب‌های بانکی</a>
+        <a class="tab-link active" th:href="@{/profile/products}"><i class="bi bi-box-seam"></i> کالاها</a>
+        <a class="tab-link" th:href="@{/profile/homes}"><i class="bi bi-house-heart"></i> خانه‌ها</a>
+        <a class="tab-link" th:href="@{/profile/my-purchases}"><i class="bi bi-receipt"></i> خریدهای من</a>
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show">
+        <i class="bi bi-check-circle-fill"></i><span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-circle-fill"></i><span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div th:if="${products.isEmpty()}" class="alert alert-info">
+        <i class="bi bi-info-circle-fill"></i> هیچ کالایی موجود نیست.
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;">
+        <div th:each="product : ${products}" class="product-card">
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+                <div class="product-icon"><i class="bi bi-box-seam-fill"></i></div>
+                <div>
+                    <div class="product-name" th:text="${product.name}"></div>
+                    <div class="product-seller">فروشنده: <span th:text="${product.username}"></span></div>
+                </div>
+            </div>
+            <div class="product-desc" th:text="${product.description}"></div>
+            <div class="product-price" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' ریال'"></div>
+            <a th:href="@{/profile/products/{id}/purchase(id=${product.id})}" class="btn btn-primary">
+                <i class="bi bi-cart-plus-fill"></i> خرید
+            </a>
+        </div>
+    </div>
+
+    <nav th:if="${products.totalPages > 1}">
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${products.first} ? 'disabled'"><a class="page-link" th:href="@{/profile/products(page=${products.number - 1})}">‹</a></li>
+            <li class="page-item" th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}" th:classappend="${i == products.number} ? 'active'"><a class="page-link" th:href="@{/profile/products(page=${i})}" th:text="${i + 1}"></a></li>
+            <li class="page-item" th:classappend="${products.last} ? 'disabled'"><a class="page-link" th:href="@{/profile/products(page=${products.number + 1})}">›</a></li>
+        </ul>
+    </nav>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

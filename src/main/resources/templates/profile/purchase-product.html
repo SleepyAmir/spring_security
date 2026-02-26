@@ -1,82 +1,84 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>خرید کالا</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Tahoma', sans-serif;
-            background-color: #f8f9fa;
-        }
-        .purchase-card {
-            background: white;
-            border-radius: 10px;
-            padding: 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .product-info {
-            background: #f8f9fa;
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-        }
-        .price-highlight {
-            font-size: 2rem;
-            color: #28a745;
-            font-weight: bold;
-        }
+        :root{--bg0:#080C16;--bg1:#0D1120;--bg2:#111827;--bg3:#161F30;--glass:rgba(255,255,255,0.04);--border:rgba(255,255,255,0.07);--border2:rgba(99,179,237,0.22);--blue:#3B82F6;--blue2:#60A5FA;--green:#10B981;--t1:#EFF6FF;--t2:#94A3B8;--t3:#4B5675;--g1:linear-gradient(135deg,#1D4ED8,#2563EB);--sh:0 4px 24px rgba(0,0,0,0.5);--shb:0 4px 16px rgba(59,130,246,0.32);--r:14px;--rs:8px;--tr:all 0.25s cubic-bezier(0.4,0,0.2,1);}
+        *{box-sizing:border-box;}
+        body{font-family:'Vazirmatn',sans-serif;background:var(--bg0);color:var(--t1);direction:rtl;text-align:right;min-height:100vh;background-image:radial-gradient(ellipse at 50% 30%,rgba(59,130,246,0.07) 0%,transparent 55%);display:flex;flex-direction:column;align-items:center;padding:2rem 1rem;}
+        .top-bar{background:rgba(8,12,22,0.96);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);height:60px;display:flex;align-items:center;padding:0 1.5rem;position:fixed;top:0;left:0;right:0;z-index:100;}
+        .top-bar-brand{font-weight:800;font-size:1rem;color:var(--t1);display:flex;align-items:center;gap:0.6rem;text-decoration:none;}
+        .brand-logo{width:32px;height:32px;background:var(--g1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.85rem;color:white;}
+        .purchase-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:2rem;box-shadow:var(--sh);width:100%;max-width:560px;margin-top:80px;animation:fadeInUp 0.4s ease forwards;}
+        .purchase-title{font-size:1.3rem;font-weight:800;color:var(--t1);text-align:center;margin-bottom:1.5rem;letter-spacing:-0.02em;}
+        .alert{border-radius:var(--r);border:1px solid;font-size:0.875rem;font-weight:500;padding:0.875rem 1rem;display:flex;align-items:center;gap:0.5rem;margin-bottom:1.25rem;}
+        .alert-danger{background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.25);color:#F87171;}
+        .alert-warning{background:rgba(245,158,11,0.1);border-color:rgba(245,158,11,0.25);color:#FCD34D;}
+        .btn-close{filter:invert(1) brightness(0.5);cursor:pointer;}
+        .info-block{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;}
+        .product-name-big{font-size:1.1rem;font-weight:700;color:var(--t1);margin-bottom:0.4rem;}
+        .product-desc-sm{font-size:0.875rem;color:var(--t2);line-height:1.5;margin-bottom:0.75rem;}
+        .price-big{font-size:2rem;font-weight:800;color:var(--green);letter-spacing:-0.03em;}
+        .form-label{font-size:0.845rem;font-weight:600;color:var(--t2);margin-bottom:0.45rem;display:block;}
+        .form-select{background:var(--bg1);border:1px solid var(--border);border-radius:var(--rs);color:var(--t1);font-family:'Vazirmatn',sans-serif;font-size:0.9rem;padding:0.7rem 1rem;transition:var(--tr);width:100%;outline:none;}
+        .form-select:focus{border-color:var(--blue);background:var(--bg2);box-shadow:0 0 0 3px rgba(59,130,246,0.14);}
+        .form-select option{background:var(--bg2);color:var(--t1);}
+        .btn-grid{display:grid;gap:0.75rem;margin-top:1.25rem;}
+        .btn{font-family:'Vazirmatn',sans-serif;font-weight:600;border-radius:var(--rs);font-size:0.9rem;transition:var(--tr);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:0.4rem;text-decoration:none;padding:0.875rem;}
+        .btn-success{background:linear-gradient(135deg,#065F46,#059669);color:white;box-shadow:0 4px 16px rgba(16,185,129,0.22);}
+        .btn-success:hover{transform:translateY(-2px);color:white;filter:brightness(1.1);}
+        .btn-secondary{background:var(--glass);color:var(--t2);border:1px solid var(--border);}
+        .btn-secondary:hover{background:var(--bg3);color:var(--t1);}
+        .btn:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
+        .mb-3{margin-bottom:1rem;}
+        @keyframes fadeInUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
     </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="purchase-card">
-                    <h3 class="text-center mb-4">خرید کالا</h3>
+<div class="top-bar">
+    <a class="top-bar-brand" href="/dashboard"><div class="brand-logo"><i class="bi bi-shield-fill-check"></i></div> سیستم مدیریت</a>
+</div>
+<div class="purchase-wrap">
+    <div class="purchase-title"><i class="bi bi-cart-check-fill" style="color:var(--green);"></i> خرید کالا</div>
 
-                    <!-- Alert Messages -->
-                    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show">
-                        <span th:text="${errorMessage}"></span>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-
-                    <!-- Product Info -->
-                    <div class="product-info">
-                        <h5 th:text="${product.name}">نام کالا</h5>
-                        <p th:text="${product.description}">توضیحات کالا</p>
-                        <p class="price-highlight mb-0" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' ریال'"></p>
-                    </div>
-
-                    <!-- Purchase Form -->
-                    <form th:action="@{/profile/products/{id}/purchase(id=${product.id})}" method="post">
-                        <div class="mb-3">
-                            <label for="bankAccountId" class="form-label">انتخاب حساب بانکی:</label>
-                            <select class="form-select" id="bankAccountId" name="bankAccountId" required>
-                                <option value="">-- یک حساب انتخاب کنید --</option>
-                                <option th:each="account : ${accounts}" 
-                                        th:value="${account.id}"
-                                        th:text="${account.accountNumber} + ' - موجودی: ' + ${#numbers.formatDecimal(account.balance, 0, 'COMMA', 0, 'POINT')} + ' ریال'">
-                                </option>
-                            </select>
-                            <div th:if="${accounts.isEmpty()}" class="alert alert-warning mt-2">
-                                شما هیچ حساب بانکی ندارید. لطفا ابتدا یک حساب ایجاد کنید.
-                            </div>
-                        </div>
-
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-success btn-lg" th:disabled="${accounts.isEmpty()}">
-                                تایید و خرید
-                            </button>
-                            <a th:href="@{/profile/products}" class="btn btn-secondary">بازگشت</a>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-circle-fill"></i><span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="info-block">
+        <div class="product-name-big" th:text="${product.name}"></div>
+        <div class="product-desc-sm" th:text="${product.description}"></div>
+        <div class="price-big" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' ریال'"></div>
+    </div>
+
+    <form th:action="@{/profile/products/{id}/purchase(id=${product.id})}" method="post">
+        <div class="mb-3">
+            <label class="form-label">انتخاب حساب بانکی:</label>
+            <select class="form-select" name="bankAccountId" required>
+                <option value="">-- یک حساب انتخاب کنید --</option>
+                <option th:each="account : ${accounts}"
+                        th:value="${account.id}"
+                        th:text="${account.accountNumber} + ' — موجودی: ' + ${#numbers.formatDecimal(account.balance, 0, 'COMMA', 0, 'POINT')} + ' ریال'"></option>
+            </select>
+            <div th:if="${accounts.isEmpty()}" class="alert alert-warning" style="margin-top:0.75rem;">
+                <i class="bi bi-exclamation-triangle-fill"></i> شما هیچ حساب بانکی ندارید.
+            </div>
+        </div>
+        <div class="btn-grid">
+            <button type="submit" class="btn btn-success" th:disabled="${accounts.isEmpty()}">
+                <i class="bi bi-check-circle-fill"></i> تایید و خرید
+            </button>
+            <a th:href="@{/profile/products}" class="btn btn-secondary">
+                <i class="bi bi-arrow-right"></i> بازگشت
+            </a>
+        </div>
+    </form>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

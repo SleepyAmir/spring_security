@@ -2,52 +2,82 @@
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: layout(~{::content})}">
 <body>
-    <div th:fragment="content">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2><i class="bi bi-person"></i> مشاهده شخص</h2>
-            <a href="/persons" class="btn btn-secondary">
-                <i class="bi bi-arrow-right"></i> بازگشت
-            </a>
+<div th:fragment="content">
+    <div class="page-header">
+        <div class="page-title">
+            <div class="title-icon"><i class="bi bi-person-fill"></i></div>
+            مشاهده شخص
         </div>
-        
-        <div class="card">
-            <div class="card-body">
-                <dl class="row">
-                    <dt class="col-sm-3">نام:</dt>
-                    <dd class="col-sm-9" th:text="${person.firstName}"></dd>
-                    
-                    <dt class="col-sm-3">نام خانوادگی:</dt>
-                    <dd class="col-sm-9" th:text="${person.lastName}"></dd>
-                    
-                    <dt class="col-sm-3">کد ملی:</dt>
-                    <dd class="col-sm-9" th:text="${person.nationalCode}"></dd>
-                    
-                    <dt class="col-sm-3">ایمیل:</dt>
-                    <dd class="col-sm-9" th:text="${person.email ?: 'تعریف نشده'}"></dd>
-                    
-                    <dt class="col-sm-3">موبایل:</dt>
-                    <dd class="col-sm-9" th:text="${person.mobile ?: 'تعریف نشده'}"></dd>
-                    
-                    <dt class="col-sm-3">دپارتمان:</dt>
-                    <dd class="col-sm-9" th:text="${person.departmentName}"></dd>
-                    
-                    <dt class="col-sm-3">وضعیت:</dt>
-                    <dd class="col-sm-9">
+        <a href="/persons" class="btn btn-secondary">
+            <i class="bi bi-arrow-right"></i> بازگشت
+        </a>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card" style="text-align:center;">
+                <div class="card-body" style="padding:2rem;">
+                    <div style="width:80px;height:80px;background:linear-gradient(135deg,#1D4ED8,#2563EB);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:800;color:white;margin:0 auto 1rem;box-shadow:0 8px 24px rgba(59,130,246,0.35);">
+                        <span th:text="${#strings.substring(person.firstName, 0, 1)}">ک</span>
+                    </div>
+                    <div style="font-size:1.25rem;font-weight:800;color:var(--t1);letter-spacing:-0.02em;" th:text="${person.firstName + ' ' + person.lastName}"></div>
+                    <div style="font-size:0.845rem;color:var(--t3);margin-top:0.25rem;" th:text="${person.departmentName}"></div>
+                    <div style="margin-top:1rem;">
                         <span th:if="${person.active}" class="badge bg-success">فعال</span>
                         <span th:unless="${person.active}" class="badge bg-danger">غیرفعال</span>
-                    </dd>
-                </dl>
-                
-                <div class="d-flex justify-content-end gap-2">
-                    <a th:href="@{/persons/edit/{id}(id=${person.id})}" class="btn btn-warning">
-                        <i class="bi bi-pencil"></i> ویرایش
-                    </a>
-                    <a href="/persons" class="btn btn-secondary">
-                        <i class="bi bi-arrow-right"></i> بازگشت
-                    </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header" style="display:flex;align-items:center;gap:0.5rem;">
+                    <i class="bi bi-card-text" style="color:var(--blue);"></i>
+                    <span style="font-size:0.875rem;font-weight:600;color:var(--t2);">اطلاعات تفصیلی</span>
+                </div>
+                <div class="card-body">
+                    <div style="display:grid;gap:0;">
+                        <div style="display:grid;grid-template-columns:130px 1fr;padding:0.875rem 0;border-bottom:1px solid var(--border);gap:1rem;align-items:center;">
+                            <div style="font-size:0.8rem;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:0.05em;">نام</div>
+                            <div style="font-size:0.9rem;color:var(--t1);font-weight:500;" th:text="${person.firstName}"></div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:130px 1fr;padding:0.875rem 0;border-bottom:1px solid var(--border);gap:1rem;align-items:center;">
+                            <div style="font-size:0.8rem;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:0.05em;">نام خانوادگی</div>
+                            <div style="font-size:0.9rem;color:var(--t1);font-weight:500;" th:text="${person.lastName}"></div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:130px 1fr;padding:0.875rem 0;border-bottom:1px solid var(--border);gap:1rem;align-items:center;">
+                            <div style="font-size:0.8rem;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:0.05em;">کد ملی</div>
+                            <div style="font-size:0.9rem;color:var(--t1);font-weight:500;font-family:monospace;" th:text="${person.nationalCode}"></div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:130px 1fr;padding:0.875rem 0;border-bottom:1px solid var(--border);gap:1rem;align-items:center;">
+                            <div style="font-size:0.8rem;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:0.05em;">ایمیل</div>
+                            <div style="font-size:0.9rem;color:var(--t1);" th:text="${person.email ?: 'ثبت نشده'}"></div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:130px 1fr;padding:0.875rem 0;border-bottom:1px solid var(--border);gap:1rem;align-items:center;">
+                            <div style="font-size:0.8rem;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:0.05em;">موبایل</div>
+                            <div style="font-size:0.9rem;color:var(--t1);direction:ltr;text-align:left;" th:text="${person.mobile ?: 'ثبت نشده'}"></div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:130px 1fr;padding:0.875rem 0;gap:1rem;align-items:center;">
+                            <div style="font-size:0.8rem;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:0.05em;">دپارتمان</div>
+                            <div>
+                                <span style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);color:#818CF8;padding:0.25rem 0.625rem;border-radius:6px;font-size:0.82rem;font-weight:600;" th:text="${person.departmentName}"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display:flex;justify-content:flex-end;gap:0.75rem;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border);">
+                        <a href="/persons" class="btn btn-secondary">
+                            <i class="bi bi-arrow-right"></i> بازگشت
+                        </a>
+                        <a th:href="@{/persons/edit/{id}(id=${person.id})}" class="btn btn-warning">
+                            <i class="bi bi-pencil-fill"></i> ویرایش
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>
