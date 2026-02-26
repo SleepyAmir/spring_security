@@ -1,6 +1,5 @@
 package com.mftplus.spring_security.Purchase;
 
-import com.mftplus.spring_security.purchase.model.Purchase;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

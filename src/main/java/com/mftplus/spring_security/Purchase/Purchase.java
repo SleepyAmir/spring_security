@@ -1,4 +1,4 @@
-package com.mftplus.spring_security.purchase.model;
+package com.mftplus.spring_security.Purchase;
 
 import com.mftplus.spring_security.bankAccount.model.entity.BankAccount;
 import com.mftplus.spring_security.core.model.User;
