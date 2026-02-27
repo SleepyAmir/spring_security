@@ -164,4 +164,31 @@ public class BankAccountController {
         model.addAttribute("account", account);
         return "bankAccount/detail";
     }
+
+    @GetMapping("/{id}/edit")
+    public String showEditForm(@PathVariable Long id, Model model) {
+        BankAccountDto account = bankAccountService.findById(id);
+        if (account == null) {
+            throw new ResourceNotFoundException("Bank Account not found with id: " + id);
+        }
+        model.addAttribute("bankAccount", account);
+        return "bankAccount/edit";
+    }
+
+    @PostMapping("/{id}/edit")
+    public String processEdit(
+            @PathVariable Long id,
+            @Valid @ModelAttribute("bankAccount") BankAccountDto bankAccountDto,
+            BindingResult result,
+            RedirectAttributes redirectAttributes) {
+
+        if (result.hasErrors()) {
+            return "bankAccount/edit";
+        }
+
+        bankAccountDto.setId(id);
+        bankAccountService.update(bankAccountDto);
+        redirectAttributes.addFlashAttribute("successMessage", "Account updated successfully!");
+        return "redirect:/bankAccount/" + id;
+    }
 }

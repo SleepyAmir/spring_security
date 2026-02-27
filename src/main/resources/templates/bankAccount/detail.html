@@ -501,7 +501,9 @@
                 <!-- نوع فعلی را نگه می‌دارد -->
                 <input type="hidden" name="type" th:value="${account.type}"/>
                 <button type="submit" class="btn btn-warning">
-                    <i class="bi bi-pencil-fill"></i> ویرایش حساب
+                    <a th:href="@{/bankAccount/{id}/edit(id=${account.id})}" class="btn btn-warning">
+                        <i class="bi bi-pencil-fill"></i> ویرایش حساب
+                    </a>
                 </button>
             </form>
 
