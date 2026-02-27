@@ -81,4 +81,11 @@ public class User {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+
+    public String getFullName() {
+        if (person != null) {
+            return person.getFirstName() + " " + person.getLastName();
+        }
+        return username;
+    }
 }

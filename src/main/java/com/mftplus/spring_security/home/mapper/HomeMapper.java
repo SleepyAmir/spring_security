@@ -7,20 +7,17 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring")
 public interface HomeMapper {
 
-    // ⚠️ mapping اضافه شد
     @Mapping(target = "userId", source = "user.id")
-    @Mapping(target = "userFullName", ignore = true) // پر می‌شود در service
+    @Mapping(target = "userFullName", source = "user.fullName") // ✅ دیگر ignore نیست
     HomeDto toDto(Home home);
 
-    // ⚠️ mapping اضافه شد
-    @Mapping(target = "user", ignore = true) // Set می‌شود در service
+    @Mapping(target = "user", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "deleted", ignore = true)
     Home toEntity(HomeDto dto);
 
-    // ⚠️ mapping اضافه شد
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)

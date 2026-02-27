@@ -126,12 +126,12 @@ public class Home implements Purchasable {
     @Builder.Default
     private boolean deleted = false;
 
-    // ⚠️⚠️⚠️ تنها تغییر مهم اینجاست
+
     @NotNull(message = "Owner is required")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false, // تغییر از person_id
-            foreignKey = @ForeignKey(name = "fk_home_user")) // تغییر نام constraint
-    private User user; // تغییر از Person person
+    @JoinColumn(name = "user_id", nullable = false,
+            foreignKey = @ForeignKey(name = "fk_home_user"))
+    private User user;
 
     @PrePersist
     protected void onCreate() {
