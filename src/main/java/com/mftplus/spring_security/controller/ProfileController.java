@@ -35,17 +35,6 @@ public class ProfileController {
     private final PurchaseService purchaseService;
 
     // ═══════════════════════════════════════════════════════════════════
-    // متد کمکی برای گرفتن userId
-    // ═══════════════════════════════════════════════════════════════════
-
-    private Long getCurrentUserId(Authentication authentication) {
-        if (authentication != null && authentication.getPrincipal() instanceof SecurityUser) {
-            return ((SecurityUser) authentication.getPrincipal()).getId();
-        }
-        return null;
-    }
-
-    // ═══════════════════════════════════════════════════════════════════
     // صفحه اصلی پروفایل - حساب‌های بانکی
     // ═══════════════════════════════════════════════════════════════════
 
@@ -114,10 +103,8 @@ public class ProfileController {
         }
 
         try {
-            // پیدا کردن محصول
             ProductDto product = productService.findById(productId);
 
-            // لیست حساب‌های بانکی کاربر
             List<BankAccountDto> accounts = bankAccountService.findByUserId(userId);
 
             model.addAttribute("product", product);
@@ -207,10 +194,8 @@ public class ProfileController {
         }
 
         try {
-            // پیدا کردن خانه
             HomeDto home = homeService.findById(homeId);
 
-            // لیست حساب‌های بانکی کاربر
             List<BankAccountDto> accounts = bankAccountService.findByUserId(userId);
 
             model.addAttribute("home", home);
@@ -279,4 +264,18 @@ public class ProfileController {
 
         return "profile/my-purchases";
     }
+
+
+
+    // ═══════════════════════════════════════════════════════════════════
+    // متد کمکی برای گرفتن userId
+    // ═══════════════════════════════════════════════════════════════════
+
+    private Long getCurrentUserId(Authentication authentication) {
+        if (authentication != null && authentication.getPrincipal() instanceof SecurityUser) {
+            return ((SecurityUser) authentication.getPrincipal()).getId();
+        }
+        return null;
+    }
+
 }
