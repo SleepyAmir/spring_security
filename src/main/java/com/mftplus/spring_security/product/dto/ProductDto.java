@@ -23,7 +23,5 @@ public class ProductDto {
     // ⚠️ فیلدهای مربوط به User اضافه شد
     private Long userId;
 
-    private String username;
-
     private String userFullName;
 }

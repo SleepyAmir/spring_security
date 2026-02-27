@@ -8,8 +8,7 @@ import org.mapstruct.*;
 public interface ProductMapper {
 
     @Mapping(target = "userId", source = "user.id")
-    @Mapping(target = "username", source = "user.username")
-    @Mapping(target = "userFullName", source = "user.fullName") // ✅ دیگر ignore نیست
+    @Mapping(target = "userFullName", source = "user.fullName" , defaultValue = "userFullName") // ✅ دیگر ignore نیست
     ProductDto toDto(Product product);
 
     @Mapping(target = "user", ignore = true)
