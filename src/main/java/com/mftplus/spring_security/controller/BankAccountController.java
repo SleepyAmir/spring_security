@@ -158,4 +158,10 @@ public class BankAccountController {
         redirectAttributes.addFlashAttribute("successMessage", "Account restored successfully!");
         return "redirect:/bankAccount/trash";
     }
+    @GetMapping("/{id}")
+    public String getBankAccountDetail(@PathVariable Long id, Model model) {
+        BankAccountDto account = bankAccountService.findById(id);
+        model.addAttribute("account", account);
+        return "bankAccount/detail";
+    }
 }
