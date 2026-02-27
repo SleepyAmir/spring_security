@@ -23,31 +23,23 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository repository;
     private final ProductMapper mapper;
-    private final UserRepository userRepository; // ⚠️ اضافه شد
+    private final UserRepository userRepository;
 
     @Override
-    public ProductDto save(ProductDto dto, Long userId) { // ⚠️ userId اضافه شد
+    public ProductDto save(ProductDto dto, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         Product product = mapper.toEntity(dto);
         product.setUser(user);
-        Product saved = repository.save(product);
-
-        ProductDto result = mapper.toDto(saved);
-        enrichDto(result, saved); // ⚠️ اضافه شد
-        return result;
+        return mapper.toDto(repository.save(product));
     }
 
     @Override
     public ProductDto update(ProductDto dto) {
         findById(dto.getId());
         Product product = mapper.toEntity(dto);
-        Product updated = repository.save(product);
-
-        ProductDto result = mapper.toDto(updated);
-        enrichDto(result, updated); // ⚠️ اضافه شد
-        return result;
+        return mapper.toDto(repository.save(product));
     }
 
     @Override
@@ -60,75 +52,42 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDto findById(Long id) {
-        Product product = repository.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException("Product with id " + id + " not found"));
-
-        ProductDto dto = mapper.toDto(product);
-        enrichDto(dto, product); // ⚠️ اضافه شد
-        return dto;
+        return mapper.toDto(repository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Product with id " + id + " not found")));
     }
 
     @Override
     public List<ProductDto> findAll() {
         return repository.findAll().stream()
-                .map(product -> {
-                    ProductDto dto = mapper.toDto(product);
-                    enrichDto(dto, product); // ⚠️ اضافه شد
-                    return dto;
-                })
+                .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public Page<ProductDto> findAll(Pageable pageable) {
-        return repository.findAll(pageable)
-                .map(product -> {
-                    ProductDto dto = mapper.toDto(product);
-                    enrichDto(dto, product); // ⚠️ اضافه شد
-                    return dto;
-                });
+        return repository.findAll(pageable).map(mapper::toDto);
     }
 
-    // ⚠️ متدهای جدید
     @Override
     public List<ProductDto> findByUserId(Long userId) {
         return repository.findByUserId(userId).stream()
-                .map(product -> {
-                    ProductDto dto = mapper.toDto(product);
-                    enrichDto(dto, product);
-                    return dto;
-                })
+                .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public Page<ProductDto> findByUserId(Long userId, Pageable pageable) {
-        return repository.findByUserId(userId, pageable)
-                .map(product -> {
-                    ProductDto dto = mapper.toDto(product);
-                    enrichDto(dto, product);
-                    return dto;
-                });
+        return repository.findByUserId(userId, pageable).map(mapper::toDto);
     }
 
     @Override
     public Page<ProductDto> findAllDeleted(Pageable pageable) {
-        return repository.findAllDeleted(pageable)
-                .map(product -> {
-                    ProductDto dto = mapper.toDto(product);
-                    enrichDto(dto, product); // ⚠️ اضافه شد
-                    return dto;
-                });
+        return repository.findAllDeleted(pageable).map(mapper::toDto);
     }
 
     @Override
     public Page<ProductDto> findAllEvenDeleted(Pageable pageable) {
-        return repository.findAllEvenDeleted(pageable)
-                .map(product -> {
-                    ProductDto dto = mapper.toDto(product);
-                    enrichDto(dto, product); // ⚠️ اضافه شد
-                    return dto;
-                });
+        return repository.findAllEvenDeleted(pageable).map(mapper::toDto);
     }
 
     @Override
@@ -139,26 +98,6 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Page<ProductDto> findByName(String name, Pageable pageable) {
         return repository.findByNameContainingIgnoreCase(name, pageable)
-                .map(product -> {
-                    ProductDto dto = mapper.toDto(product);
-                    enrichDto(dto, product); // ⚠️ اضافه شد
-                    return dto;
-                });
-    }
-
-    // ⚠️ متد جدید برای پر کردن اطلاعات User
-    private void enrichDto(ProductDto dto, Product product) {
-        if (product.getUser() != null) {
-            dto.setUserId(product.getUser().getId());
-            dto.setUsername(product.getUser().getUsername());
-
-            if (product.getUser().getPerson() != null) {
-                String fullName = product.getUser().getPerson().getFirstName() + " " +
-                        product.getUser().getPerson().getLastName();
-                dto.setUserFullName(fullName);
-            } else {
-                dto.setUserFullName(product.getUser().getUsername());
-            }
-        }
+                .map(mapper::toDto);
     }
 }

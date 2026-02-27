@@ -7,14 +7,12 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
 
-    // ⚠️ mapping اضافه شد
     @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "username", source = "user.username")
-    @Mapping(target = "userFullName", ignore = true) // پر می‌شود در service
+    @Mapping(target = "userFullName", source = "user.fullName") // ✅ دیگر ignore نیست
     ProductDto toDto(Product product);
 
-    // ⚠️ mapping اضافه شد
-    @Mapping(target = "user", ignore = true) // Set می‌شود در service
+    @Mapping(target = "user", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "deleted", ignore = true)
     @Mapping(target = "createdDate", ignore = true)
