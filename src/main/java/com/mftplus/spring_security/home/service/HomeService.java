@@ -18,7 +18,6 @@ public interface HomeService {
     HomeDto         findById(Long id);
     Page<HomeDto>   findAll(Pageable pageable);
 
-    // ⚠️ تغییر از PersonId به UserId
     List<HomeDto>   findAllByUserId(Long userId);
     Page<HomeDto>   findAllByUserId(Long userId, Pageable pageable);
 

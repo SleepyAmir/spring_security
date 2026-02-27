@@ -8,7 +8,7 @@ import org.mapstruct.*;
 public interface HomeMapper {
 
     @Mapping(target = "userId", source = "user.id")
-    @Mapping(target = "userFullName", source = "user.fullName") // ✅ دیگر ignore نیست
+    @Mapping(target = "userFullName", source = "user.fullName")
     HomeDto toDto(Home home);
 
     @Mapping(target = "user", ignore = true)
