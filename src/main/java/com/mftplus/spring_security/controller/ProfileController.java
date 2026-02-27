@@ -1,7 +1,7 @@
 package com.mftplus.spring_security.controller;
 
-import com.mftplus.spring_security.Purchase.PurchaseDto;
-import com.mftplus.spring_security.Purchase.PurchaseService;
+import com.mftplus.spring_security.Purchase.dto.PurchaseDto;
+import com.mftplus.spring_security.Purchase.service.PurchaseService;
 import com.mftplus.spring_security.bankAccount.dto.BankAccountDto;
 import com.mftplus.spring_security.bankAccount.service.BankAccountService;
 import com.mftplus.spring_security.core.security.SecurityUser;

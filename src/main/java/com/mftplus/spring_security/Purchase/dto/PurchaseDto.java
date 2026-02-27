@@ -1,4 +1,4 @@
-package com.mftplus.spring_security.Purchase;
+package com.mftplus.spring_security.Purchase.dto;
 
 
 import lombok.AllArgsConstructor;
