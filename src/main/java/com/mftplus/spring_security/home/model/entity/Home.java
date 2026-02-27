@@ -4,6 +4,7 @@ import com.mftplus.spring_security.core.model.Purchasable;
 import com.mftplus.spring_security.core.model.User; // ⚠️ تغییر از Person
 import com.mftplus.spring_security.home.model.enums.HomeStatus;
 import com.mftplus.spring_security.home.model.enums.HomeType;
+import com.mftplus.spring_security.product.model.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -21,7 +22,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
-public class Home implements Purchasable {
+public class Home extends BaseEntity implements Purchasable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

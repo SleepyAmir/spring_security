@@ -3,6 +3,7 @@ package com.mftplus.spring_security.bankAccount.model.entity;
 import com.mftplus.spring_security.bankAccount.model.enums.AccountType;
 import com.mftplus.spring_security.core.model.Person;
 import com.mftplus.spring_security.core.model.User;
+import com.mftplus.spring_security.product.model.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -23,7 +24,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Getter
 @Setter
-public class BankAccount  {
+public class BankAccount extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
