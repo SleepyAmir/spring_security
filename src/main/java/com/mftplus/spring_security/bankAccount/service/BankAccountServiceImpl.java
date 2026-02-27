@@ -18,7 +18,6 @@ import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.stream.Collectors;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -26,7 +25,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     private final BankAccountRepository bankAccountRepository;
     private final BankAccountMapper bankAccountMapper;
-    private final UserRepository userRepository; // ⚠️ اضافه شد
+    private final UserRepository userRepository;
 
     private final SecureRandom random = new SecureRandom();
     private static final String ACCOUNT_BIN = "6037";
@@ -34,21 +33,16 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     @Transactional
     @Override
-    public void save(BankAccountDto bankAccountDto, Long userId) { // ⚠️ userId اضافه شد
+    public void save(BankAccountDto bankAccountDto, Long userId) {
         log.info("Creating bank account for user: {}", userId);
 
-        // پیدا کردن کاربر
         User user = findUser(userId);
-
-        // تولید شماره حساب و تنظیم موجودی اولیه
         bankAccountDto.setAccountNumber(generateAccountNumber());
         bankAccountDto.setBalance(DEFAULT_BALANCE);
 
-        // تبدیل به entity
         BankAccount bankAccount = bankAccountMapper.toEntity(bankAccountDto);
         bankAccount.setUser(user);
 
-        // ذخیره
         bankAccountRepository.save(bankAccount);
         log.info("Bank account created successfully with account number: {}", bankAccount.getAccountNumber());
     }
@@ -65,10 +59,8 @@ public class BankAccountServiceImpl implements BankAccountService {
         BankAccount existingAccount = bankAccountRepository.findById(bankAccountDto.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Account not found with id: " + bankAccountDto.getId()));
 
-        // فقط type قابل تغییر است
         existingAccount.setType(bankAccountDto.getType());
         bankAccountRepository.save(existingAccount);
-
         log.info("Bank account updated successfully");
     }
 
@@ -89,13 +81,8 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Transactional(readOnly = true)
     public BankAccountDto findById(Long id) {
         log.debug("Finding bank account by id: {}", id);
-
         return bankAccountRepository.findById(id)
-                .map(account -> {
-                    BankAccountDto dto = bankAccountMapper.toDto(account);
-                    enrichDto(dto, account);
-                    return dto;
-                })
+                .map(bankAccountMapper::toDto)
                 .orElse(null);
     }
 
@@ -103,14 +90,9 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Transactional(readOnly = true)
     public List<BankAccountDto> findAll() {
         log.debug("Finding all bank accounts");
-
         return bankAccountRepository.findAll()
                 .stream()
-                .map(account -> {
-                    BankAccountDto dto = bankAccountMapper.toDto(account);
-                    enrichDto(dto, account);
-                    return dto;
-                })
+                .map(bankAccountMapper::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -118,27 +100,17 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Transactional(readOnly = true)
     public Page<BankAccountDto> findAll(Pageable pageable) {
         log.debug("Finding all bank accounts with pagination");
-
         return bankAccountRepository.findAll(pageable)
-                .map(account -> {
-                    BankAccountDto dto = bankAccountMapper.toDto(account);
-                    enrichDto(dto, account);
-                    return dto;
-                });
+                .map(bankAccountMapper::toDto);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<BankAccountDto> findByUserId(Long userId) {
         log.debug("Finding bank accounts for user: {}", userId);
-
         return bankAccountRepository.findByUserId(userId)
                 .stream()
-                .map(account -> {
-                    BankAccountDto dto = bankAccountMapper.toDto(account);
-                    enrichDto(dto, account);
-                    return dto;
-                })
+                .map(bankAccountMapper::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -146,39 +118,24 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Transactional(readOnly = true)
     public Page<BankAccountDto> findByUserId(Long userId, Pageable pageable) {
         log.debug("Finding bank accounts for user: {} with pagination", userId);
-
         return bankAccountRepository.findByUserId(userId, pageable)
-                .map(account -> {
-                    BankAccountDto dto = bankAccountMapper.toDto(account);
-                    enrichDto(dto, account);
-                    return dto;
-                });
+                .map(bankAccountMapper::toDto);
     }
 
     @Transactional
     @Override
     public Page<BankAccountDto> findAllDeleted(Pageable pageable) {
         log.debug("Finding all deleted bank accounts");
-
         return bankAccountRepository.findAllDeleted(pageable)
-                .map(account -> {
-                    BankAccountDto dto = bankAccountMapper.toDto(account);
-                    enrichDto(dto, account);
-                    return dto;
-                });
+                .map(bankAccountMapper::toDto);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<BankAccountDto> findAllEvenDeleted(Pageable pageable) {
         log.debug("Finding all bank accounts including deleted");
-
         return bankAccountRepository.findAllEvenDeleted(pageable)
-                .map(account -> {
-                    BankAccountDto dto = bankAccountMapper.toDto(account);
-                    enrichDto(dto, account);
-                    return dto;
-                });
+                .map(bankAccountMapper::toDto);
     }
 
     @Transactional
@@ -193,13 +150,8 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Transactional(readOnly = true)
     public Page<BankAccountDto> findByAccountNumber(String accountNumber, Pageable pageable) {
         log.debug("Finding bank account by account number: {}", accountNumber);
-
         return bankAccountRepository.findByAccountNumber(accountNumber, pageable)
-                .map(account -> {
-                    BankAccountDto dto = bankAccountMapper.toDto(account);
-                    enrichDto(dto, account);
-                    return dto;
-                });
+                .map(bankAccountMapper::toDto);
     }
 
     @Override
@@ -207,60 +159,29 @@ public class BankAccountServiceImpl implements BankAccountService {
     public BankAccountDto issueAccount(Long userId, AccountType accountType) {
         log.info("Issuing new {} account for user: {}", accountType, userId);
 
-        // پیدا کردن کاربر
         User user = findUser(userId);
 
-        // ساخت حساب جدید
         BankAccount bankAccount = new BankAccount();
         bankAccount.setAccountNumber(generateAccountNumber());
         bankAccount.setBalance(DEFAULT_BALANCE);
         bankAccount.setType(accountType);
         bankAccount.setUser(user);
 
-        // ذخیره
         BankAccount saved = bankAccountRepository.save(bankAccount);
-
-        BankAccountDto dto = bankAccountMapper.toDto(saved);
-        enrichDto(dto, saved);
-
         log.info("Account issued successfully with account number: {}", saved.getAccountNumber());
-        return dto;
+
+        return bankAccountMapper.toDto(saved);
     }
 
     // ─────────────────────────────────────────────────────────────────────────
     // Private Helper Methods
     // ─────────────────────────────────────────────────────────────────────────
 
-    /**
-     * پیدا کردن User یا پرتاب استثنا
-     */
     private User findUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
     }
 
-    /**
-     * غنی‌سازی DTO با اطلاعات کامل User
-     */
-    private void enrichDto(BankAccountDto dto, BankAccount bankAccount) {
-        if (bankAccount.getUser() != null) {
-            dto.setUserId(bankAccount.getUser().getId());
-            dto.setUsername(bankAccount.getUser().getUsername());
-
-            // نام کامل از Person
-            if (bankAccount.getUser().getPerson() != null) {
-                String fullName = bankAccount.getUser().getPerson().getFirstName() + " " +
-                        bankAccount.getUser().getPerson().getLastName();
-                dto.setUserFullName(fullName);
-            } else {
-                dto.setUserFullName(bankAccount.getUser().getUsername());
-            }
-        }
-    }
-
-    /**
-     * تولید شماره حساب یونیک
-     */
     private String generateAccountNumber() {
         StringBuilder sb = new StringBuilder(ACCOUNT_BIN);
         for (int i = 0; i < 12; i++) {
