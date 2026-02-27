@@ -102,7 +102,7 @@ public class PurchaseService {
         validateAccountOwnership(account, userId);
 
         // چک موجودی
-        validateBalance(account, home.getPrice().doubleValue());
+        validateBalance(account, home.getPrice());
 
         // کسر موجودی
         account.setBalance(account.getBalance().subtract(BigDecimal.valueOf(home.getPrice())));
