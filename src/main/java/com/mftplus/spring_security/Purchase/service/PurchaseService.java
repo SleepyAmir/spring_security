@@ -34,35 +34,24 @@ public class PurchaseService {
     private final ProductRepository productRepository;
     private final HomeRepository homeRepository;
 
-    // ═══════════════════════════════════════════════════════════════════
-    // خرید Product
-    // ═══════════════════════════════════════════════════════════════════
-
     @Transactional
     public PurchaseDto buyProduct(Long userId, Long productId, Long bankAccountId) {
         log.info("Processing product purchase: userId={}, productId={}", userId, productId);
 
-        // پیدا کردن Product
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Product not found"));
 
-        // پیدا کردن User
         User user = findUser(userId);
 
-        // پیدا کردن BankAccount
         BankAccount account = findBankAccount(bankAccountId);
 
-        // چک مالکیت حساب
         validateAccountOwnership(account, userId);
 
-        // چک موجودی
         validateBalance(account, product.getPrice());
 
-        // کسر موجودی
         account.setBalance(account.getBalance().subtract(BigDecimal.valueOf(product.getPrice())));
         bankAccountRepository.save(account);
 
-        // ثبت خرید
         Purchase purchase = Purchase.builder()
                 .invoiceNumber(generateInvoice())
                 .price(product.getPrice())
@@ -78,44 +67,32 @@ public class PurchaseService {
         return convertToDto(saved);
     }
 
-    // ═══════════════════════════════════════════════════════════════════
-    // خرید Home
-    // ═══════════════════════════════════════════════════════════════════
 
     @Transactional
     public PurchaseDto buyHome(Long userId, Long homeId, Long bankAccountId) {
         log.info("Processing home purchase: userId={}, homeId={}", userId, homeId);
 
-        // پیدا کردن Home
         Home home = homeRepository.findById(homeId)
                 .orElseThrow(() -> new IllegalArgumentException("Home not found"));
 
-        // چک وضعیت
         if (home.getStatus() != HomeStatus.AVAILABLE) {
             throw new IllegalArgumentException("Home is not available for purchase");
         }
 
-        // پیدا کردن User
         User user = findUser(userId);
 
-        // پیدا کردن BankAccount
         BankAccount account = findBankAccount(bankAccountId);
 
-        // چک مالکیت حساب
         validateAccountOwnership(account, userId);
 
-        // چک موجودی
         validateBalance(account, home.getPrice());
 
-        // کسر موجودی
         account.setBalance(account.getBalance().subtract(BigDecimal.valueOf(home.getPrice())));
         bankAccountRepository.save(account);
 
-        // تغییر وضعیت Home
         home.setStatus(HomeStatus.SOLD);
         homeRepository.save(home);
 
-        // ثبت خرید
         Purchase purchase = Purchase.builder()
                 .invoiceNumber(generateInvoice())
                 .price(home.getPrice().doubleValue())
@@ -131,9 +108,6 @@ public class PurchaseService {
         return convertToDto(saved);
     }
 
-    // ═══════════════════════════════════════════════════════════════════
-    // لیست خریدهای کاربر (مثل SimCard)
-    // ═══════════════════════════════════════════════════════════════════
 
     @Transactional(readOnly = true)
     public List<PurchaseDto> findAllByUserId(Long userId) {
@@ -156,9 +130,6 @@ public class PurchaseService {
                 .map(this::convertToDto);
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Private Helper Methods
-    // ─────────────────────────────────────────────────────────────────────────
 
     private User findUser(Long userId) {
         return userRepository.findById(userId)
@@ -194,19 +165,16 @@ public class PurchaseService {
         dto.setPrice(purchase.getPrice());
         dto.setPurchaseType(purchase.getPurchaseType());
 
-        // User info
         if (purchase.getUser() != null) {
             dto.setUserId(purchase.getUser().getId());
             dto.setUsername(purchase.getUser().getUsername());
         }
 
-        // BankAccount info
         if (purchase.getBankAccount() != null) {
             dto.setBankAccountId(purchase.getBankAccount().getId());
             dto.setAccountNumber(purchase.getBankAccount().getAccountNumber());
         }
 
-        // Item name
         if ("PRODUCT".equals(purchase.getPurchaseType()) && purchase.getProduct() != null) {
             dto.setItemName(purchase.getProduct().getName());
             dto.setProductId(purchase.getProduct().getId());
